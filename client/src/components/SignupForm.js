@@ -10,7 +10,7 @@ const SignupForm = ({onSubmit}) => {
 
     return (
         <div>
-            <Header as='h2'>Signup</Header>
+            <Header as='h2'>Register</Header>
             <Form onSubmit={handleSubmit}>
                 <Form.Input
                     icon='phone'

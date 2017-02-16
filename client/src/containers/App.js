@@ -1,11 +1,15 @@
 import React, {Component} from 'react';
-import Signup from './Signup';
-import Login from './Login';
+import {Router, browserHistory} from 'react-router'
+import configureRoutes from '../routes';
 import '../App.css';
 
 class App extends Component {
     render() {
-        return (<Signup/>);
+        return (
+            <Router history={browserHistory}>
+                {configureRoutes()}
+            </Router>
+        );     
     }
 }
 
