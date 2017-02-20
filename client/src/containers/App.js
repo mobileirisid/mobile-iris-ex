@@ -1,15 +1,18 @@
 import React, {Component} from 'react';
-import {Router, browserHistory} from 'react-router'
+import {Provider} from 'react-redux';
+import {Router} from 'react-router'
 import configureRoutes from '../routes';
 import '../App.css';
 
 class App extends Component {
     render() {
         return (
-            <Router history={browserHistory}>
-                {configureRoutes()}
-            </Router>
-        );     
+            <Provider store={this.props.store}>
+                <Router history={this.props.history}>
+                    {configureRoutes()}
+                </Router>
+            </Provider>
+        );
     }
 }
 
