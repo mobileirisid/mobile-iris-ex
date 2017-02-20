@@ -5,7 +5,7 @@ const SIGN_UP_ERROR = 'SIGN_UP_ERROR';
 const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 
 const initState = {
-    isAuthenticated: false,
+    isAuthenticated: false,    
     currentUser: {}
 };
 
@@ -27,21 +27,18 @@ export function signup(data) {
 }
 
 export function signUpError(error) {
-    return {type: SIGN_UP_ERROR, message: error}
+    return {type: SIGN_UP_ERROR, errorMessage: error}
 }
 
 export default function reducer(state = initState, action) {
     switch (action.type) {
         case SIGN_UP:
-            console.log('signup');
             return state;
         case SIGN_UP_SUCCESS:
-            console.log('success');
             return state;
         case SIGN_UP_ERROR:
-            console.log('error');
-            return state;
+            return {...state, errorMessage: action.errorMessage};
         default:
-            return state
+            return state;
     }
 }

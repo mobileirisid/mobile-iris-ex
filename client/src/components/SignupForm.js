@@ -1,16 +1,25 @@
 import React, {PropTypes} from 'react'
-import {Form, Header} from 'semantic-ui-react';
+import {Form, Header, Message} from 'semantic-ui-react';
 
-const SignupForm = ({onSubmit}) => {
+const SignupForm = ({onSubmit, error}) => {
 
     const handleSubmit = (e, {formData}) => {
         e.preventDefault();
         onSubmit(formData);
     }
 
+    const ErrorMessage = (error) => {
+        if (error) {
+            return (
+                <Message error header='Unable to Sign up to do following errors' content={error}/>
+            )
+        };
+    }
+
     return (
         <div>
             <Header as='h2'>Register</Header>
+            {ErrorMessage(error)}
             <Form onSubmit={handleSubmit}>
                 <Form.Input
                     icon='mail outline'
@@ -59,7 +68,8 @@ const SignupForm = ({onSubmit}) => {
 }
 
 SignupForm.propType = {
-    onSubmit: PropTypes.object.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    error: PropTypes.string
 }
 
 export default SignupForm
