@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -21,7 +22,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./public"))
 	router.PathPrefix("/").Handler(fs)
 
-	err := http.ListenAndServe(":9000", router)
+	// Alex L - To enable CORS
+	handler := cors.Default().Handler(router)
+	err := http.ListenAndServe(":9000", handler)
 	if err != nil {
 		log.Fatal("ListendAndServe:", err)
 	}
