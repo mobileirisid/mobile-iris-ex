@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react'
 import {Form, Header, Message} from 'semantic-ui-react';
 
-const SignupForm = ({onSubmit, error}) => {
+const SignupForm = ({onSubmit, error, loading}) => {
 
     const handleSubmit = (e, {formData}) => {
         e.preventDefault();
@@ -20,7 +20,7 @@ const SignupForm = ({onSubmit, error}) => {
         <div>
             <Header as='h2'>Register</Header>
             {ErrorMessage(error)}
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit} loading={loading}>
                 <Form.Input
                     icon='mail outline'
                     iconPosition={'left'}
@@ -69,7 +69,8 @@ const SignupForm = ({onSubmit, error}) => {
 
 SignupForm.propType = {
     onSubmit: PropTypes.func.isRequired,
-    error: PropTypes.string
+    error: PropTypes.string,
+    loading: PropTypes.bool
 }
 
 export default SignupForm

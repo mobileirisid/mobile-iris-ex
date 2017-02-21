@@ -7,12 +7,12 @@ import {signup} from '../redux/modules/signup';
 
 class Signup extends Component {
     render () {
-        const {errorMessage} = this.props;
+        const {errorMessage, loading} = this.props;
         return (
             <div>
                 <LoginSignupNavbar/>
                 <CenteredColumn>
-                    <SignupForm onSubmit={this.props.onSubmit} error={errorMessage}/>
+                    <SignupForm onSubmit={this.props.onSubmit} error={errorMessage} loading={loading}/>
                 </CenteredColumn>
             </div>
         )
@@ -21,7 +21,8 @@ class Signup extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        errorMessage: state.signup.errorMessage
+        errorMessage: state.signup.errorMessage,
+        loading: state.signup.loading
     }
 }
 

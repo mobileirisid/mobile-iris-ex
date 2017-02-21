@@ -6,6 +6,7 @@ const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 
 const initState = {
     isAuthenticated: false,
+    loading: false,
     currentUser: {}
 };
 
@@ -37,13 +38,20 @@ export function signUpError(error) {
 export default function reducer(state = initState, action) {
     switch (action.type) {
         case SIGN_UP:
-            return state;
+            return {
+                ...state,
+                loading: true
+            };
         case SIGN_UP_SUCCESS:
-            return state;
+            return {
+                ...state,
+                loading: false
+            };
         case SIGN_UP_ERROR:
             return {
                 ...state,
-                errorMessage: action.errorMessage
+                errorMessage: action.errorMessage,
+                loading: false
             };
         default:
             return state;
