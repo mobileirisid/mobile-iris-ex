@@ -9,7 +9,7 @@ class App extends Component {
         return (
             <Provider store={this.props.store}>
                 <Router history={this.props.history}>
-                    {configureRoutes()}
+                    {configureRoutes(this.props.store)}
                 </Router>
             </Provider>
         );

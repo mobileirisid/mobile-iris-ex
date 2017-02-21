@@ -1,4 +1,5 @@
 import http from '../../utils/networking';
+import {push} from 'react-router-redux';
 
 const SIGN_UP = 'SIGN_UP';
 const SIGN_UP_ERROR = 'SIGN_UP_ERROR';
@@ -6,8 +7,7 @@ const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 
 const initState = {
     isAuthenticated: false,
-    loading: false,
-    currentUser: {}
+    loading: false
 };
 
 export function signup(data) {
@@ -22,7 +22,10 @@ export function signup(data) {
                 if (res.data.error) {
                     dispatch(signUpError(res.data.error))
                 } else {
-                    dispatch({type: SIGN_UP_SUCCESS})
+                    const {data} = res;
+                    localStorage.setItem('token', data.token);
+                    dispatch({type: SIGN_UP_SUCCESS});
+                    dispatch(push('/'));
                 }
             })
             .catch((err) => {

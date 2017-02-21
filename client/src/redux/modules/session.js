@@ -5,8 +5,7 @@ const LOGIN_ERROR = 'LOGIN_ERROR';
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 
 const initState = {
-    isAuthenticated: false,    
-    currentUser: {}
+    isAuthenticated: false    
 };
 
 export function signup(data) {    
