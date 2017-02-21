@@ -16,6 +16,7 @@ import (
 func main() {
 	router := mux.NewRouter()
 	router.Methods(http.MethodPost).Path("/api/registration").HandlerFunc(registerationHandler)
+	router.Methods(http.MethodPost).Path("/api/login").HandlerFunc(sessionHandler)
 
 	fs := http.FileServer(http.Dir("./public"))
 	router.PathPrefix("/").Handler(fs)
@@ -65,6 +66,40 @@ func registerationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
+	w.Write(body)
+}
+
+func sessionHandler(w http.ResponseWriter, r *http.Request) {
+	type LoginCredentials struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	var credentials LoginCredentials
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&credentials)
+
+	if err != nil {
+		writeBadRequest(w, err)
+		return
+	}
+
+	val, _ := json.Marshal(credentials)
+	resp, err := http.Post("http://localhost:8000/session", "application/json", strings.NewReader(string(val)))
+	defer resp.Body.Close()
+
+	if err != nil {
+		writeBadRequest(w, err)
+		return
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		writeBadRequest(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 	w.Write(body)
 }

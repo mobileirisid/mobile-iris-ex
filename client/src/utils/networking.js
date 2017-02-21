@@ -1,9 +1,11 @@
+import axios from 'axios';
+
 const http = {
     get: (url) => {
-        return url;
+        return axios(url);
     },
     post: (url, body) => {
-        return body;
+        return axios.post(url, body);
     }
 }
 

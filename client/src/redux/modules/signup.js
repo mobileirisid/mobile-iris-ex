@@ -5,7 +5,7 @@ const SIGN_UP_ERROR = 'SIGN_UP_ERROR';
 const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 
 const initState = {
-    isAuthenticated: false,    
+    isAuthenticated: false,
     currentUser: {}
 };
 
@@ -18,7 +18,11 @@ export function signup(data) {
         http
             .post('http://localhost:9000/api/registration', data)
             .then((res) => {
-                dispatch({type: SIGN_UP_SUCCESS})
+                if (res.data.error) {
+                    dispatch(signUpError(res.data.error))
+                } else {
+                    dispatch({type: SIGN_UP_SUCCESS})
+                }
             })
             .catch((err) => {
                 dispatch(signUpError(err))
@@ -37,7 +41,10 @@ export default function reducer(state = initState, action) {
         case SIGN_UP_SUCCESS:
             return state;
         case SIGN_UP_ERROR:
-            return {...state, errorMessage: action.errorMessage};
+            return {
+                ...state,
+                errorMessage: action.errorMessage
+            };
         default:
             return state;
     }
