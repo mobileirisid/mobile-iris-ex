@@ -12,7 +12,7 @@ export function signup(data) {
     return (dispatch) => {
         dispatch({type: LOGIN});
         http
-            .post('http://localhost:9000/api/registration', data)
+            .post('/api/registration', data)
             .then((res) => {
                 dispatch({type: LOGIN_SUCCESS})
             })

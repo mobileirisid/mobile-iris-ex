@@ -1,4 +1,5 @@
 import http from '../../utils/networking';
+import persistence from '../../utils/persistence';
 import {push} from 'react-router-redux';
 
 const SIGN_UP = 'SIGN_UP';
@@ -17,13 +18,13 @@ export function signup(data) {
     return (dispatch) => {
         dispatch({type: SIGN_UP});
         http
-            .post('http://localhost:9000/api/registration', data)
+            .post('/api/registration', data)
             .then((res) => {
                 if (res.data.error) {
                     dispatch(signUpError(res.data.error))
                 } else {
                     const {data} = res;
-                    localStorage.setItem('token', data.token);
+                    persistence.saveToken(data.token);
                     dispatch({type: SIGN_UP_SUCCESS});
                     dispatch(push('/'));
                 }

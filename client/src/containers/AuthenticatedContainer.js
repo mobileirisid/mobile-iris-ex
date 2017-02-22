@@ -9,7 +9,7 @@ class AuthenticatedContainer extends Component {
 
         return (
             <div>
-                <MainNavbar/>
+                <MainNavbar subscribers={this.props.subscribers} onClick={this.props.onClick}/>
                 <CenterColumn>
                     {this.props.children}
                 </CenterColumn>
@@ -24,4 +24,12 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
-export default connect(mapStateToProps)(AuthenticatedContainer)
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        onClick: () => {
+            console.log('hello world');
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuthenticatedContainer)
