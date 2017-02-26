@@ -1,4 +1,5 @@
 const TOKEN = 'token';
+
 export function saveToken(token) {
     localStorage.setItem(TOKEN, token);
 }

@@ -7,9 +7,7 @@ class CenterColumn extends Component {
             <div>
                 <Grid container centered columns='equal'>
                     <Grid.Column width={8}>
-                        <Segment raised padded textAlign={'left'}>
-                            {this.props.children}
-                        </Segment>
+                        {this.props.children}                        
                     </Grid.Column>
                 </Grid>
             </div>

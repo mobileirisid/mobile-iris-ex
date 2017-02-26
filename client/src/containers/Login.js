@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import CenteredColumn from '../components/CenterColumn';
+import CenteredFormContainer from '../components/CenteredFormContainer';
 import LoginSignupNavbar from '../components/LoginSignupNavbar';
 import LoginForm from '../components/LoginForm';
 import {login} from '../redux/modules/'
@@ -10,9 +10,9 @@ class Login extends Component {
         return (
             <div>
                 <LoginSignupNavbar/>
-                <CenteredColumn>
+                <CenteredFormContainer>
                     <LoginForm onSubmit={this.props.onSubmit} error={this.props.errorMessage}/>
-                </CenteredColumn>
+                </CenteredFormContainer>
             </div>
         );
     }

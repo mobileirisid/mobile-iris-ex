@@ -5,14 +5,14 @@ const FETCH_SUBSCRIBER = 'FETCH_SUBSCRIBER';
 const FETCH_SUBSCRIBER_ERROR = 'FETCH_SUBSCRIBER_ERROR';
 const FETCH_SUBSCRIBER_SUCCESS = 'FETCH_SUBSCRIBER_SUCCESS';
 
+const token = persistence.getToken();
 const initState = {
     loading: false,
     currentSubscriber: {}
 };
 
 export function fetchSubscriber(id) {
-    return dispatch => {
-        token = persistence.getToken();
+    return dispatch => {        
         dispatch({type: FETCH_SUBSCRIBER});
         http
             .get(`/subscriber/${id}.json?apikey=${token}`)
