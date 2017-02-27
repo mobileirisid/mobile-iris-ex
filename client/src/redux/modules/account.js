@@ -14,6 +14,7 @@ const initState = {
 };
 
 export function selectSubscriber(subscriber) {
+    persistence.setCurrentSubscriberId(subscriber.id);
     return {type: SELECTED_SUBSCRIBER, subscriber}
 };
 

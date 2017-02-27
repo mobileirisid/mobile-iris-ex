@@ -30,8 +30,8 @@ export function loginError(error) {
 }
 
 export function logout() {
-    persistence.clearAll()
-    dispatch => {
+    persistence.clearAll();
+    return dispatch => {
         dispatch(push('/login'));
         dispatch({type: LOGOUT});
     }
@@ -47,9 +47,9 @@ export default function reducer(state = initState, action) {
             return {...state, errorMessage: action.errorMessage};
         case LOGOUT:
             return state;
-            // return {
-            //     isAuthenticated: false
-            // }
+            return {
+                isAuthenticated: false
+            }
         default:
             return state;
     }

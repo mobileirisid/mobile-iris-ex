@@ -3,22 +3,31 @@ import {connect} from 'react-redux';
 import CenterColumn from '../components/CenterColumn';
 import MainNavbar from '../components/MainNavbar';
 import {fetchSubscribers, selectSubscriber} from '../redux/modules/account';
+import {logout} from '../redux/modules/session';
 
 class AuthenticatedContainer extends Component {
 
     componentDidMount() {
-        this.props.fetchSubscribers();
+        this
+            .props
+            .fetchSubscribers();
     }
 
     render() {
         const {selectedSubscriber} = this.props;
         const {subscribers} = this.props;
         const {onSelect} = this.props;
+        const {logout} = this.props;
         const {loading} = this.props;
 
         return (
             <div>
-                <MainNavbar selected={selectedSubscriber} subscribers={subscribers} onSelect={onSelect} loading={loading}/>
+                <MainNavbar
+                    selected={selectedSubscriber}
+                    subscribers={subscribers}
+                    onSelect={onSelect}
+                    onLogout={logout}
+                    loading={loading}/>
                 <CenterColumn>
                     {this.props.children}
                 </CenterColumn>
@@ -28,11 +37,7 @@ class AuthenticatedContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    return {
-        subscribers: state.account.subscribers,
-        selectedSubscriber: state.account.currentSubscriber,
-        loading: state.account.loading
-    }
+    return {subscribers: state.account.subscribers, selectedSubscriber: state.account.currentSubscriber, loading: state.account.loading}
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -42,6 +47,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         fetchSubscribers: () => {
             dispatch(fetchSubscribers());
+        },
+        logout: () => {
+            dispatch(logout());
         }
     }
 }

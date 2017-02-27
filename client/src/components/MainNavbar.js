@@ -3,7 +3,7 @@ import {Menu, Button, Image, Dropdown} from 'semantic-ui-react';
 import {Link} from 'react-router';
 import acmePay from '../icons/acme.png';
 
-const MainNavbar = ({selected, subscribers, onSelect, loading}) => {
+const MainNavbar = ({selected, subscribers, onSelect, onLogout, loading}) => {
 
     const selectedItem = (e, item) => {
         onSelect(subscribers.find(val => val.id === item.value));
@@ -18,10 +18,14 @@ const MainNavbar = ({selected, subscribers, onSelect, loading}) => {
     }
 
     const selectedSubscriber = () => {
+        if (loading) {
+            return "";
+        }
+
         if (selected && selected.id) {
             return selected.firstName + " " + selected.lastName;
         } else {
-            return "None Selected";
+            return "Select a Subscriber";
         }
     }
 
@@ -42,11 +46,9 @@ const MainNavbar = ({selected, subscribers, onSelect, loading}) => {
                         </Dropdown.Menu>
                     </Menu.Item>
                     <Menu.Item>
-                        <Link to="/login">
-                            <Button inverted size='small'>
-                                Logout
-                            </Button>
-                        </Link>
+                        <Button inverted size='small' onClick={onLogout}>
+                            Logout
+                        </Button>
                     </Menu.Item>
                 </Menu.Menu>
             </Menu>
@@ -58,6 +60,7 @@ MainNavbar.propType = {
     current: PropTypes.object,
     subscribers: PropTypes.object.isRequired,
     onSelect: PropTypes.func.isRequired,
+    onLogout: PropTypes.func.isRequired,
     loading: PropTypes.bool
 }
 
