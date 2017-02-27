@@ -1,10 +1,9 @@
 import React from 'react'
-import {Grid, Segment, Image, Header, Divider} from 'semantic-ui-react'
+import {Grid, Image, Header, Divider} from 'semantic-ui-react'
 import personOne from '../icons/person1.png'
 import personTwo from '../icons/person2.png'
 import grayArrow from '../icons/arrow_gray.png'
 import appIcon from '../icons/appicon.png'
-// import ValidateButtons from './ValidateButtons'
 
 const MainContent = () => {
     return (
@@ -48,7 +47,7 @@ const MainContent = () => {
                         <Grid.Column width={13}>
                             <Header as="h4" textAlign={'left'}>PayPal's MobileIrisID security is
                                 automatically enabled for transactions over $1000.
-                                <a>Learn More</a>
+                                <a> Learn More</a>
                             </Header>
                         </Grid.Column>
                     </Grid>

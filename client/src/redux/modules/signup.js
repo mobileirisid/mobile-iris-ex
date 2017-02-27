@@ -11,6 +11,12 @@ const initState = {
     loading: false
 };
 
+const saveLocalSessionData = (data) => {
+    persistence.setToken(data.token);
+    persistence.setCurrentSubscriberId(data.subscriber_id);
+    persistence.setCurrentPhoneId(data.phone_id);
+}
+
 export function signup(data) {
     if (data.password !== data.verify_password) {
         return signUpError('passwords do not match');
@@ -24,8 +30,8 @@ export function signup(data) {
                     dispatch(signUpError(res.data.error))
                 } else {
                     const {data} = res;
-                    persistence.saveToken(data.token);
-                    dispatch({type: SIGN_UP_SUCCESS});
+                    saveLocalSessionData(data);
+                    dispatch({type: SIGN_UP_SUCCESS, data});
                     dispatch(push('/'));
                 }
             })
@@ -49,6 +55,8 @@ export default function reducer(state = initState, action) {
         case SIGN_UP_SUCCESS:
             return {
                 ...state,
+                subsciberID: action.data.subsciber_id,
+                phoneID: action.data.phone_id,
                 loading: false
             };
         case SIGN_UP_ERROR:

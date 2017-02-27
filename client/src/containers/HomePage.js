@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Segment} from 'semantic-ui-react';
-import MainNavbar from '../components/MainNavbar';
 import MainContent from '../components/MainContent';
 import ValidateButtons from '../components/ValidateButtons/index';
 import {requestCheck, cancelCheck} from '../redux/modules/irisValidation';

@@ -2,14 +2,23 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux';
 import CenterColumn from '../components/CenterColumn';
 import MainNavbar from '../components/MainNavbar';
+import {fetchSubscribers, selectSubscriber} from '../redux/modules/account';
 
 class AuthenticatedContainer extends Component {
+
+    componentDidMount() {
+        this.props.fetchSubscribers();
+    }
+
     render() {
-        const {currentUser} = this.props;
+        const {selectedSubscriber} = this.props;
+        const {subscribers} = this.props;
+        const {onSelect} = this.props;
+        const {loading} = this.props;
 
         return (
             <div>
-                <MainNavbar subscribers={this.props.subscribers} onClick={this.props.onClick}/>
+                <MainNavbar selected={selectedSubscriber} subscribers={subscribers} onSelect={onSelect} loading={loading}/>
                 <CenterColumn>
                     {this.props.children}
                 </CenterColumn>
@@ -20,14 +29,19 @@ class AuthenticatedContainer extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        currentUser: state.session
+        subscribers: state.account.subscribers,
+        selectedSubscriber: state.account.currentSubscriber,
+        loading: state.account.loading
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onClick: () => {
-            console.log('hello world');
+        onSelect: (subscriber) => {
+            dispatch(selectSubscriber(subscriber));
+        },
+        fetchSubscribers: () => {
+            dispatch(fetchSubscribers());
         }
     }
 }

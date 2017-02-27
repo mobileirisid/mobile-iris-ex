@@ -10,14 +10,24 @@ import (
 
 	"strings"
 
+	"fmt"
+
+	"errors"
+	"strconv"
+
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 )
+
+var baseURL = "http://localhost:8000"
 
 func main() {
 	router := mux.NewRouter()
 	router.Methods(http.MethodPost).Path("/api/registration").HandlerFunc(registerationHandler)
 	router.Methods(http.MethodPost).Path("/api/login").HandlerFunc(sessionHandler)
+	router.Methods(http.MethodGet).Path("/api/status/{id}").HandlerFunc(sessionHandler)
+	router.Methods(http.MethodGet).Path("/api/subscriber").HandlerFunc(getSubscribersHandler)
+	router.Methods(http.MethodGet).Path("/api/subscriber/{id}").HandlerFunc(getSubscriberHandler)
 
 	fs := http.FileServer(http.Dir("./public"))
 	router.PathPrefix("/").Handler(fs)
@@ -55,7 +65,8 @@ func registerationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	val, _ := json.Marshal(registration)
-	resp, err := http.Post("http://localhost:8000/registration", "application/json", strings.NewReader(string(val)))
+	url := fmt.Sprintf("%s/registration", baseURL)
+	resp, err := http.Post(url, "application/json", strings.NewReader(string(val)))
 	defer resp.Body.Close()
 
 	if err != nil {
@@ -89,7 +100,8 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	val, _ := json.Marshal(credentials)
-	resp, err := http.Post("http://localhost:8000/session", "application/json", strings.NewReader(string(val)))
+	url := fmt.Sprintf("%s/session", baseURL)
+	resp, err := http.Post(url, "application/json", strings.NewReader(string(val)))
 	defer resp.Body.Close()
 
 	if err != nil {
@@ -105,4 +117,68 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
+}
+
+func getSubscribersHandler(w http.ResponseWriter, r *http.Request) {
+	apiKey := r.URL.Query().Get("apikey")
+	if apiKey == "" {
+		writeBadRequest(w, errors.New("Missing API Key in request"))
+		return
+	}
+
+	url := fmt.Sprintf("%s/subscriber.json?apikey=%s", baseURL, apiKey)
+	result, err := http.Get(url)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "request failed"}`))
+	} else {
+		body, _ := ioutil.ReadAll(result.Body)
+		w.Write(body)
+	}
+}
+
+func getSubscriberHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	apiKey := r.URL.Query().Get("apikey")
+	if apiKey == "" {
+		writeBadRequest(w, errors.New("Missing API Key in request"))
+		return
+	}
+
+	if id, err := strconv.ParseInt(vars["id"], 10, 0); err == nil {
+		url := fmt.Sprintf("%s/subscriber/%d.json?apikey=%s", baseURL, id, apiKey)
+		result, err := http.Get(url)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(`{"error": "request failed"}`))
+		} else {
+			body, _ := ioutil.ReadAll(result.Body)
+			w.Write(body)
+		}
+	} else {
+		writeBadRequest(w, errors.New("Invalid id paramater, are you sure this is an int?"))
+	}
+}
+
+func checkScanStatus(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	apiKey := r.URL.Query().Get("apikey")
+	if apiKey == "" {
+		writeBadRequest(w, errors.New("Missing API Key in request"))
+		return
+	}
+
+	if id, err := strconv.ParseInt(vars["id"], 10, 0); err == nil {
+		url := fmt.Sprintf("%s/request/status/%d?apikey=%s", baseURL, id, apiKey)
+		result, err := http.Get(url)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(`{"error": "request failed"}`))
+		} else {
+			body, _ := ioutil.ReadAll(result.Body)
+			w.Write(body)
+		}
+	} else {
+		writeBadRequest(w, errors.New("Invalid id paramater, are you sure this is an int?"))
+	}
 }
