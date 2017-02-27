@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"io/ioutil"
 	"net/http"
 
@@ -21,13 +22,20 @@ import (
 
 var baseURL = "http://localhost:8000"
 
+type key string
+
+const (
+	API_KEY key = "apikey"
+)
+
 func main() {
 	router := mux.NewRouter()
 	router.Methods(http.MethodPost).Path("/api/registration").HandlerFunc(registerationHandler)
 	router.Methods(http.MethodPost).Path("/api/login").HandlerFunc(sessionHandler)
 	router.Methods(http.MethodGet).Path("/api/status/{id}").HandlerFunc(sessionHandler)
-	router.Methods(http.MethodGet).Path("/api/subscriber").HandlerFunc(getSubscribersHandler)
-	router.Methods(http.MethodGet).Path("/api/subscriber/{id}").HandlerFunc(getSubscriberHandler)
+	router.Methods(http.MethodGet).Path("/api/subscriber").HandlerFunc(retrieveAPIKey(getSubscribersHandler))
+	router.Methods(http.MethodGet).Path("/api/subscriber/{id}").HandlerFunc(retrieveAPIKey(getSubscriberHandler))
+	router.Methods(http.MethodPost).Path("/api/check").HandlerFunc(retrieveAPIKey(requestValidation))
 
 	fs := http.FileServer(http.Dir("./public"))
 	router.PathPrefix("/").Handler(fs)
@@ -38,6 +46,18 @@ func main() {
 	if err != nil {
 		log.Fatal("ListendAndServe:", err)
 	}
+}
+
+func retrieveAPIKey(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		key := r.URL.Query().Get("apikey")
+		if key == "" {
+			writeBadRequest(w, errors.New("Missing API Key in request"))
+		} else {
+			ctx := context.WithValue(r.Context(), API_KEY, key)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		}
+	})
 }
 
 func writeBadRequest(w http.ResponseWriter, e error) {
@@ -120,13 +140,9 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getSubscribersHandler(w http.ResponseWriter, r *http.Request) {
-	apiKey := r.URL.Query().Get("apikey")
-	if apiKey == "" {
-		writeBadRequest(w, errors.New("Missing API Key in request"))
-		return
-	}
+	key := r.Context().Value(API_KEY)
 
-	url := fmt.Sprintf("%s/subscriber.json?apikey=%s", baseURL, apiKey)
+	url := fmt.Sprintf("%s/subscriber.json?apikey=%s", baseURL, key)
 	result, err := http.Get(url)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -139,14 +155,10 @@ func getSubscribersHandler(w http.ResponseWriter, r *http.Request) {
 
 func getSubscriberHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	apiKey := r.URL.Query().Get("apikey")
-	if apiKey == "" {
-		writeBadRequest(w, errors.New("Missing API Key in request"))
-		return
-	}
+	key := r.Context().Value(API_KEY)
 
 	if id, err := strconv.ParseInt(vars["id"], 10, 0); err == nil {
-		url := fmt.Sprintf("%s/subscriber/%d.json?apikey=%s", baseURL, id, apiKey)
+		url := fmt.Sprintf("%s/subscriber/%d.json?apikey=%s", baseURL, id, key)
 		result, err := http.Get(url)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -162,14 +174,10 @@ func getSubscriberHandler(w http.ResponseWriter, r *http.Request) {
 
 func checkScanStatus(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	apiKey := r.URL.Query().Get("apikey")
-	if apiKey == "" {
-		writeBadRequest(w, errors.New("Missing API Key in request"))
-		return
-	}
+	key := r.Context().Value(API_KEY)
 
 	if id, err := strconv.ParseInt(vars["id"], 10, 0); err == nil {
-		url := fmt.Sprintf("%s/request/status/%d?apikey=%s", baseURL, id, apiKey)
+		url := fmt.Sprintf("%s/request/status/%d?apikey=%s", baseURL, id, key)
 		result, err := http.Get(url)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -181,4 +189,8 @@ func checkScanStatus(w http.ResponseWriter, r *http.Request) {
 	} else {
 		writeBadRequest(w, errors.New("Invalid id paramater, are you sure this is an int?"))
 	}
+}
+
+func requestValidation(w http.ResponseWriter, r *http.Request) {
+
 }
