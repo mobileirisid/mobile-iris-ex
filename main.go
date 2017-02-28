@@ -20,12 +20,11 @@ import (
 	"github.com/rs/cors"
 )
 
-var baseURL = "http://localhost:8000"
-
 type key string
 
 const (
-	API_KEY key = "apikey"
+	apiKey  key = "apikey"
+	baseURL     = "http://localhost:8000"
 )
 
 func main() {
@@ -54,7 +53,7 @@ func retrieveAPIKey(next http.HandlerFunc) http.HandlerFunc {
 		if key == "" {
 			writeBadRequest(w, errors.New("Missing API Key in request"))
 		} else {
-			ctx := context.WithValue(r.Context(), API_KEY, key)
+			ctx := context.WithValue(r.Context(), apiKey, key)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		}
 	})
@@ -85,7 +84,7 @@ func registerationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	val, _ := json.Marshal(registration)
-	url := fmt.Sprintf("%s/registration", baseURL)
+	url := fmt.Sprintf("%s/register_with_subscriber", baseURL)
 	resp, err := http.Post(url, "application/json", strings.NewReader(string(val)))
 	defer resp.Body.Close()
 
@@ -140,7 +139,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getSubscribersHandler(w http.ResponseWriter, r *http.Request) {
-	key := r.Context().Value(API_KEY)
+	key := r.Context().Value(apiKey)
 
 	url := fmt.Sprintf("%s/subscriber.json?apikey=%s", baseURL, key)
 	result, err := http.Get(url)
@@ -155,7 +154,7 @@ func getSubscribersHandler(w http.ResponseWriter, r *http.Request) {
 
 func getSubscriberHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	key := r.Context().Value(API_KEY)
+	key := r.Context().Value(apiKey)
 
 	if id, err := strconv.ParseInt(vars["id"], 10, 0); err == nil {
 		url := fmt.Sprintf("%s/subscriber/%d.json?apikey=%s", baseURL, id, key)
@@ -174,7 +173,7 @@ func getSubscriberHandler(w http.ResponseWriter, r *http.Request) {
 
 func checkScanStatus(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	key := r.Context().Value(API_KEY)
+	key := r.Context().Value(apiKey)
 
 	if id, err := strconv.ParseInt(vars["id"], 10, 0); err == nil {
 		url := fmt.Sprintf("%s/request/status/%d?apikey=%s", baseURL, id, key)
@@ -192,5 +191,25 @@ func checkScanStatus(w http.ResponseWriter, r *http.Request) {
 }
 
 func requestValidation(w http.ResponseWriter, r *http.Request) {
+	key := r.Context().Value(apiKey)
+	url := fmt.Sprintf("%s/request/check.json?apikey=%s", baseURL, key)
 
+	err := r.ParseForm()
+	if err != nil {
+		writeBadRequest(w, errors.New("Make sure to send in subscriber_id and phone_id"))
+	} else {
+		req, err := http.NewRequest(http.MethodPost, url, strings.NewReader(r.Form.Encode()))
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Set("Accept", "application/json")
+
+		client := &http.Client{}
+		res, err := client.Do(req)
+
+		if err != nil {
+			log.Println("Failed to get resp for mobile iris id server due to: ", err)
+		}
+		body, _ := ioutil.ReadAll(res.Body)
+		res.Body.Close()
+		w.Write(body)
+	}
 }

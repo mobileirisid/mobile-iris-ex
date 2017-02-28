@@ -40,7 +40,7 @@ const MainNavbar = ({selected, subscribers, onSelect, onLogout, loading}) => {
                         <Dropdown.Menu>
                             {subs().map((s) => {
                                 return <Dropdown.Item key={s.id} value={s.id} onClick={selectedItem}>
-                                    <font>{`${s.firstName} - ${s.lastName}`}</font>
+                                    <font>{`${s.firstName} ${s.lastName}`}</font>
                                 </Dropdown.Item>
                             })}
                         </Dropdown.Menu>

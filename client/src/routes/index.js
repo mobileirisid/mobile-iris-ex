@@ -8,9 +8,7 @@ import * as persistence from '../utils/persistence';
 
 export default function configureRoutes(store) {
     const ensureAuthenticated = (nextState, replace, cb) => {
-        // const {dispatch} = store;
-        // const {session} = store.getState();
-        // const {currentUser} = session;
+        
         if (!persistence.getToken()) {
             replace('/signup');
         }

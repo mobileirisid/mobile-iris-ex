@@ -53,7 +53,11 @@ function retrievedSubscriber(data) {
 }
 
 function retrievedSubscribers(data) {
-    return {type: FETCH_SUBSCRIBERS_SUCCESS, subscribers: data};
+    if (data) {
+        return {type: FETCH_SUBSCRIBERS_SUCCESS, subscribers: data};
+    } else {
+        return {type: FETCH_SUBSCRIBERS_SUCCESS, subscribers: []};
+    }
 }
 
 function failedFetch(err) {

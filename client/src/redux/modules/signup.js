@@ -1,5 +1,5 @@
 import http from '../../utils/networking';
-import persistence from '../../utils/persistence';
+import * as persistence from '../../utils/persistence';
 import {push} from 'react-router-redux';
 
 const SIGN_UP = 'SIGN_UP';
