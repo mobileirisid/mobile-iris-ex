@@ -11,13 +11,7 @@ const initState = {
     loading: false
 };
 
-const saveLocalSessionData = (data) => {
-    persistence.setToken(data.token);
-    persistence.setCurrentSubscriberId(data.subscriber_id);
-    persistence.setCurrentPhoneId(data.phone_id);
-}
-
-export function signup(data) {
+export function signupWithSubscriber(data) {
     if (data.password !== data.verify_password) {
         return signUpError('passwords do not match');
     }
@@ -30,7 +24,33 @@ export function signup(data) {
                     dispatch(signUpError(res.data.error))
                 } else {
                     const {data} = res;
-                    saveLocalSessionData(data);
+                    persistence.setToken(data.token);
+                    persistence.setCurrentSubscriberId(data.subscriber_id);
+                    persistence.setCurrentPhoneId(data.phone_id);
+                    dispatch({type: SIGN_UP_SUCCESS, data});
+                    dispatch(push('/'));
+                }
+            })
+            .catch((err) => {
+                dispatch(signUpError(err))
+            });
+    }
+}
+
+export function signup(data) {
+    if (data.password !== data.verify_password) {
+        return signUpError('passwords do not match');
+    }
+    return (dispatch) => {
+        dispatch({type: SIGN_UP});
+        http
+            .post('/register', data)
+            .then((res) => {
+                if (res.data.error) {
+                    dispatch(signUpError(res.data.error))
+                } else {
+                    const {data} = res;
+                    persistence.setToken(data.token);
                     dispatch({type: SIGN_UP_SUCCESS, data});
                     dispatch(push('/'));
                 }
