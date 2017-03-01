@@ -22,7 +22,7 @@ export function fetchSubscribers() {
     return dispatch => {
         dispatch({type: FETCH_DATA});
         http
-            .get(`/api/subscriber?apikey=${token}`)
+            .get(`/subscriber.json?apikey=${token}`)
             .then(res => {
                 dispatch(retrievedSubscribers(res.data.items));
             })

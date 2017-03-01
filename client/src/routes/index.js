@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import Signup from '../containers/Signup';
+import SignupWithSubscriber from '../containers/SignupWithSubscriber';
 import Login from '../containers/Login';
 import Home from '../containers/HomePage';
 import AuthenticatedContainer from '../containers/AuthenticatedContainer';
@@ -18,8 +18,8 @@ export default function configureRoutes(store) {
     return (
         <div>
             <Route>
-                <IndexRoute component={Signup} />
-                <Route path='/signup' component={Signup}/>
+                <IndexRoute component={SignupWithSubscriber} />
+                <Route path='/signup' component={SignupWithSubscriber}/>
                 <Route path='/login' component={Login}/>
 
                 <Route path='/' component={AuthenticatedContainer} onEnter={ensureAuthenticated}>

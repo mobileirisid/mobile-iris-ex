@@ -24,7 +24,7 @@ export function signup(data) {
     return (dispatch) => {
         dispatch({type: SIGN_UP});
         http
-            .post('/api/registration', data)
+            .post('/register_with_subscriber', data)
             .then((res) => {
                 if (res.data.error) {
                     dispatch(signUpError(res.data.error))

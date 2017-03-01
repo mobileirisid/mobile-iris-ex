@@ -2,17 +2,17 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import CenteredFormContainer from '../components/CenteredFormContainer';
 import LoginSignupNavbar from '../components/LoginSignupNavbar';
-import SignupForm from '../components/SignupForm';
+import SignupWithSubscriberForm from '../components/SignupWithSubscriberForm';
 import {signup} from '../redux/modules/signup';
 
-class Signup extends Component {
+class SignupWithSubscriber extends Component {
     render () {
         const {errorMessage, loading} = this.props;
         return (
             <div>
                 <LoginSignupNavbar/>
                 <CenteredFormContainer>
-                    <SignupForm onSubmit={this.props.onSubmit} error={errorMessage} loading={loading}/>
+                    <SignupWithSubscriberForm onSubmit={this.props.onSubmit} error={errorMessage} loading={loading}/>
                 </CenteredFormContainer>
             </div>
         )
@@ -34,4 +34,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default connect(mapStateToProps, mapDispatchToProps)(SignupWithSubscriber);
