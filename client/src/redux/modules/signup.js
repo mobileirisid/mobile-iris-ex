@@ -51,6 +51,7 @@ export function signup(data) {
                 } else {
                     const {data} = res;
                     persistence.setToken(data.token);
+                    persistence.setUserID(data.user_id);
                     dispatch({type: SIGN_UP_SUCCESS, data});
                     dispatch(push('/'));
                 }

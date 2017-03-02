@@ -1,4 +1,5 @@
 const TOKEN = 'token';
+const USER_ID = 'userID';
 const SUBSCRIBER_ID = 'subscriberID';
 const PHONE_ID = 'phoneID';
 
@@ -8,6 +9,14 @@ export function setToken(token) {
 
 export function getToken() {
     return localStorage.getItem(TOKEN);
+}
+
+export function setUserId(id) {
+    localStorage.setItem(USER_ID, id);
+}
+
+export function getUserId() {
+    return localStorage.getItem(USER_ID);
 }
 
 export function setCurrentSubscriberId(id) {

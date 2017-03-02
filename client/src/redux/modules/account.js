@@ -6,6 +6,7 @@ const FETCH_SUBSCRIBER_SUCCESS = 'FETCH_SUBSCRIBER_SUCCESS';
 const FETCH_SUBSCRIBERS_SUCCESS = 'FETCH_SUBSCRIBERS_SUCCESS';
 const FETCH_ERROR = 'FETCH_SUBSCRIBER_ERROR';
 const SELECTED_SUBSCRIBER = 'SELECTED_SUBSCRIBER';
+const ADD_SUBSCRIBER = 'ADD_SUBSCRIBER';
 
 const token = persistence.getToken();
 const initState = {
@@ -42,9 +43,14 @@ export function fetchSubscriber(id) {
                 dispatch(retrievedSubscriber(res.data));
             })
             .catch(err => {
-                console.log('wtf');
                 dispatch(failedFetch(err));
             });
+    }
+}
+
+export function addSubscriber(data) {
+    return dispatch => {
+        
     }
 }
 

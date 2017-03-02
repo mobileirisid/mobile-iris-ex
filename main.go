@@ -34,6 +34,7 @@ func main() {
 	router.Methods(http.MethodGet).Path("/status/{id}").HandlerFunc(sessionHandler)
 	router.Methods(http.MethodGet).Path("/subscriber").HandlerFunc(retrieveAPIKey(getSubscribersHandler))
 	router.Methods(http.MethodGet).Path("/subscriber/{id}").HandlerFunc(retrieveAPIKey(getSubscriberHandler))
+	router.Methods(http.MethodPost).Path("/subscriber/add").HandlerFunc(retrieveAPIKey(addSubscriberHandler))
 	router.Methods(http.MethodPost).Path("/check").HandlerFunc(retrieveAPIKey(requestValidation))
 
 	fs := http.FileServer(http.Dir("./public"))
@@ -168,6 +169,30 @@ func getSubscriberHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		writeBadRequest(w, errors.New("Invalid id paramater, are you sure this is an int?"))
+	}
+}
+
+func addSubscriberHandler(w http.ResponseWriter, r *http.Request) {
+	key := r.Context().Value(apiKey)
+	url := fmt.Sprintf("%s/subscriber/add?apikey=%s", baseURL, key)
+	err := r.ParseForm()
+	if err != nil {
+		writeBadRequest(w, err)
+		return
+	}
+
+	req, err := http.NewRequest(http.MethodPost, url, strings.NewReader(r.Form.Encode()))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "request failed"}`))
+	} else {
+		body, err := ioutil.ReadAll(req.Body)
+		log.Printf(string(body))
+		if err != nil {
+			writeBadRequest(w, err)
+			return
+		}
+		w.Write(body)
 	}
 }
 
