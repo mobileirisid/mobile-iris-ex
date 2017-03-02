@@ -3,7 +3,7 @@ import {Menu, Button, Image, Dropdown} from 'semantic-ui-react';
 import {Link} from 'react-router';
 import acmePay from '../icons/acme.png';
 
-const MainNavbar = ({selected, subscribers, onSelect, onLogout, loading}) => {
+const MainNavbar = ({selected, subscribers, onSelect, onLogout, loading, addSubscriber}) => {
 
     const selectedItem = (e, item) => {
         onSelect(subscribers.find(val => val.id === item.value));
@@ -36,6 +36,9 @@ const MainNavbar = ({selected, subscribers, onSelect, onLogout, loading}) => {
                     <Image src={acmePay} size={"small"}/>
                 </Menu.Item>
                 <Menu.Menu position='right'>
+                    <Menu.Item>
+                        {addSubscriber}                        
+                    </Menu.Item>
                     <Menu.Item as={Dropdown} text={selectedSubscriber()} loading={loading}>
                         <Dropdown.Menu>
                             {subs().map((s) => {
@@ -61,6 +64,7 @@ MainNavbar.propType = {
     subscribers: PropTypes.object.isRequired,
     onSelect: PropTypes.func.isRequired,
     onLogout: PropTypes.func.isRequired,
+    addSubscriber: PropTypes.object,
     loading: PropTypes.bool
 }
 

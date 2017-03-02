@@ -44,7 +44,7 @@ export function signup(data) {
     return (dispatch) => {
         dispatch({type: SIGN_UP});
         http
-            .post('/register', data)
+            .post('/registration', data)
             .then((res) => {
                 if (res.data.error) {
                     dispatch(signUpError(res.data.error))
@@ -77,6 +77,7 @@ export default function reducer(state = initState, action) {
                 ...state,
                 subsciberID: action.data.subsciber_id,
                 phoneID: action.data.phone_id,
+                errorMessage: null,
                 loading: false
             };
         case SIGN_UP_ERROR:

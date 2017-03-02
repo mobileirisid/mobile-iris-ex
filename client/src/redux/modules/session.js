@@ -15,7 +15,7 @@ export function signup(data) {
     return (dispatch) => {
         dispatch({type: LOGIN});
         http
-            .post('/api/registration', data)
+            .post('/registration', data)
             .then((res) => {
                 dispatch({type: LOGIN_SUCCESS})
             })

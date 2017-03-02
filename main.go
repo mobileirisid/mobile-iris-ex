@@ -29,12 +29,12 @@ const (
 
 func main() {
 	router := mux.NewRouter()
-	router.Methods(http.MethodPost).Path("/api/registration").HandlerFunc(registerationHandler)
-	router.Methods(http.MethodPost).Path("/api/login").HandlerFunc(sessionHandler)
-	router.Methods(http.MethodGet).Path("/api/status/{id}").HandlerFunc(sessionHandler)
-	router.Methods(http.MethodGet).Path("/api/subscriber").HandlerFunc(retrieveAPIKey(getSubscribersHandler))
-	router.Methods(http.MethodGet).Path("/api/subscriber/{id}").HandlerFunc(retrieveAPIKey(getSubscriberHandler))
-	router.Methods(http.MethodPost).Path("/api/check").HandlerFunc(retrieveAPIKey(requestValidation))
+	router.Methods(http.MethodPost).Path("/registration").HandlerFunc(registerationHandler)
+	router.Methods(http.MethodPost).Path("/login").HandlerFunc(sessionHandler)
+	router.Methods(http.MethodGet).Path("/status/{id}").HandlerFunc(sessionHandler)
+	router.Methods(http.MethodGet).Path("/subscriber").HandlerFunc(retrieveAPIKey(getSubscribersHandler))
+	router.Methods(http.MethodGet).Path("/subscriber/{id}").HandlerFunc(retrieveAPIKey(getSubscriberHandler))
+	router.Methods(http.MethodPost).Path("/check").HandlerFunc(retrieveAPIKey(requestValidation))
 
 	fs := http.FileServer(http.Dir("./public"))
 	router.PathPrefix("/").Handler(fs)

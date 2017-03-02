@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
+import {Button} from 'semantic-ui-react';
 import CenterColumn from '../components/CenterColumn';
 import MainNavbar from '../components/MainNavbar';
 import {fetchSubscribers, selectSubscriber} from '../redux/modules/account';
 import {logout} from '../redux/modules/session';
+import AddSubscriber from '../components/Subscribers/AddSubscriber';
 
 class AuthenticatedContainer extends Component {
 
@@ -19,6 +21,16 @@ class AuthenticatedContainer extends Component {
         const {onSelect} = this.props;
         const {logout} = this.props;
         const {loading} = this.props;
+        const {addSubscriber} = this.props;
+        const {error} = this.props;
+
+        const renderButton = (
+            <Button inverted size='small'>
+                Add Subscriber
+            </Button>
+        )
+
+        const subscriberModal = (<AddSubscriber onSubmit={addSubscriber} show={renderButton} error={error}/>)
 
         return (
             <div>
@@ -27,7 +39,8 @@ class AuthenticatedContainer extends Component {
                     subscribers={subscribers}
                     onSelect={onSelect}
                     onLogout={logout}
-                    loading={loading}/>
+                    loading={loading}
+                    addSubscriber={subscriberModal}/>
                 <CenterColumn>
                     {this.props.children}
                 </CenterColumn>
@@ -37,7 +50,7 @@ class AuthenticatedContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    return {subscribers: state.account.subscribers, selectedSubscriber: state.account.currentSubscriber, loading: state.account.loading}
+    return {subscribers: state.account.subscribers, selectedSubscriber: state.account.currentSubscriber, loading: state.account.loading, error: state.account.error}
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -50,6 +63,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         logout: () => {
             dispatch(logout());
+        },
+        addSubscriber: () => {
+            console.log('add subscriber');
         }
     }
 }

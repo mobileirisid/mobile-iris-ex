@@ -22,7 +22,7 @@ export function fetchSubscribers() {
     return dispatch => {
         dispatch({type: FETCH_DATA});
         http
-            .get(`/subscriber.json?apikey=${token}`)
+            .get(`/subscriber?apikey=${token}`)
             .then(res => {
                 dispatch(retrievedSubscribers(res.data.items));
             })
@@ -37,13 +37,13 @@ export function fetchSubscriber(id) {
     return dispatch => {
         dispatch({type: FETCH_DATA});
         http
-            .get(`/subscriber/${id}.json?apikey=${token}`)
+            .get(`/subscriber/${id}?apikey=${token}`)
             .then(res => {
                 dispatch(retrievedSubscriber(res.data));
             })
             .catch(err => {
-                console.log(err);
-                failedFetch(err.error);
+                console.log('wtf');
+                dispatch(failedFetch(err));
             });
     }
 }
@@ -91,7 +91,7 @@ export default function (state = initState, action) {
                         return {id: d.id, firstName: d.first_name, lastName: d.last_name, phones: d.phones}
                     })
             };
-        case FETCH_ERROR:
+        case FETCH_ERROR:            
             return {
                 ...state,
                 loading: false,
