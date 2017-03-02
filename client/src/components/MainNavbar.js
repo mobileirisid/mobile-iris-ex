@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react'
 import {Menu, Button, Image, Dropdown} from 'semantic-ui-react';
-import {Link} from 'react-router';
 import acmePay from '../icons/acme.png';
 
 const MainNavbar = ({selected, subscribers, onSelect, onLogout, loading, addSubscriber}) => {

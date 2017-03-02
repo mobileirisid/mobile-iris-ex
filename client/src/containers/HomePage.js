@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Segment} from 'semantic-ui-react';
 import MainContent from '../components/MainContent';
 import ValidateButtons from '../components/ValidateButtons/index';
-import {requestCheck, cancelCheck} from '../redux/modules/irisValidation';
+import {requestValidation, cancelCheck} from '../redux/modules/irisValidation';
 
 class HomePage extends Component {
     render() {
@@ -28,7 +28,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onValidate: () => {
-            dispatch(requestCheck());
+            dispatch(requestValidation());
         },
         onCancel: () => {
             dispatch(cancelCheck());

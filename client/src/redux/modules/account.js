@@ -1,12 +1,12 @@
 import http from '../../utils/networking';
 import * as persistence from '../../utils/persistence';
 
-const FETCH_DATA = 'FETCH_DATA';
+const LOADING = 'LOADING';
 const FETCH_SUBSCRIBER_SUCCESS = 'FETCH_SUBSCRIBER_SUCCESS';
 const FETCH_SUBSCRIBERS_SUCCESS = 'FETCH_SUBSCRIBERS_SUCCESS';
-const FETCH_ERROR = 'FETCH_SUBSCRIBER_ERROR';
+const REQUEST_ERROR = 'FETCH_SUBSCRIBER_ERROR';
 const SELECTED_SUBSCRIBER = 'SELECTED_SUBSCRIBER';
-const ADD_SUBSCRIBER = 'ADD_SUBSCRIBER';
+const ADDED_SUBSCRIBER = 'ADD_SUBSCRIBER';
 
 const token = persistence.getToken();
 const initState = {
@@ -21,7 +21,7 @@ export function selectSubscriber(subscriber) {
 
 export function fetchSubscribers() {
     return dispatch => {
-        dispatch({type: FETCH_DATA});
+        dispatch({type: LOADING});
         http
             .get(`/subscriber?apikey=${token}`)
             .then(res => {
@@ -36,7 +36,7 @@ export function fetchSubscribers() {
 
 export function fetchSubscriber(id) {
     return dispatch => {
-        dispatch({type: FETCH_DATA});
+        dispatch({type: LOADING});
         http
             .get(`/subscriber/${id}?apikey=${token}`)
             .then(res => {
@@ -50,7 +50,15 @@ export function fetchSubscriber(id) {
 
 export function addSubscriber(data) {
     return dispatch => {
-        
+        dispatch({type: LOADING});
+        http
+            .post(`/subscriber/add?apikey=${token}`)
+            .then(res => {
+                dispatch({type: ADDED_SUBSCRIBER, subscriber: res.data});
+            })
+            .catch(err => {
+                dispatch(failedFetch(err));
+            });
     }
 }
 
@@ -67,12 +75,12 @@ function retrievedSubscribers(data) {
 }
 
 function failedFetch(err) {
-    return {type: FETCH_ERROR, errorMessage: err};
+    return {type: REQUEST_ERROR, errorMessage: err};
 }
 
 export default function (state = initState, action) {
     switch (action.type) {
-        case FETCH_DATA:
+        case LOADING:
             return {
                 ...state,
                 loading: true
@@ -97,7 +105,7 @@ export default function (state = initState, action) {
                         return {id: d.id, firstName: d.first_name, lastName: d.last_name, phones: d.phones}
                     })
             };
-        case FETCH_ERROR:            
+        case REQUEST_ERROR:            
             return {
                 ...state,
                 loading: false,
@@ -106,8 +114,17 @@ export default function (state = initState, action) {
         case SELECTED_SUBSCRIBER:
             return {
                 ...state,
+                loading: false,
                 currentSubscriber: action.subscriber,
                 currentSubscriberPhones: action.subscriber.phones
+            }
+        case ADDED_SUBSCRIBER:
+            const subs = state.subscribers
+            const s = action.subscriber.map(d => { return {id: d.id, firstName: d.first_name, lastName: d.last_name, phones: d.phones}})
+            return {
+                ...state,
+                loading: false,
+                subscriber: subs.concat(s)
             }
         default:
             return state;

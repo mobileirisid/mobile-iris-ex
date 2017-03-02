@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Button} from 'semantic-ui-react';
 import CenterColumn from '../components/CenterColumn';
 import MainNavbar from '../components/MainNavbar';
-import {fetchSubscribers, selectSubscriber} from '../redux/modules/account';
+import {fetchSubscribers, selectSubscriber, addSubscriber} from '../redux/modules/account';
 import {logout} from '../redux/modules/session';
 import AddSubscriber from '../components/Subscribers/AddSubscriber';
 
@@ -28,9 +28,13 @@ class AuthenticatedContainer extends Component {
             <Button inverted size='small'>
                 Add Subscriber
             </Button>
-        )
+        );
 
-        const subscriberModal = (<AddSubscriber onSubmit={addSubscriber} show={renderButton} error={error}/>)
+        const subscriberModal = (<AddSubscriber
+            onSubmit={addSubscriber}
+            show={renderButton}
+            error={error}
+            loading={loading}/>);
 
         return (
             <div>
@@ -58,14 +62,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onSelect: (subscriber) => {
             dispatch(selectSubscriber(subscriber));
         },
+        addSubscriber: (data) => {
+            dispatch(addSubscriber(data))
+        },
         fetchSubscribers: () => {
             dispatch(fetchSubscribers());
         },
         logout: () => {
             dispatch(logout());
-        },
-        addSubscriber: () => {
-            console.log('add subscriber');
         }
     }
 }

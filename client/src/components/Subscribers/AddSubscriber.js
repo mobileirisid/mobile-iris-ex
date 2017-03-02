@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
-import {Form, Modal, Message, Segment, Head} from 'semantic-ui-react';
+import {Form, Modal, Message, Icon} from 'semantic-ui-react';
 
-const AddSubscriber = ({show, onSubmit, error}) => {
+const AddSubscriber = ({show, onSubmit, error, loading}) => {
 
     const handleSubmit = (e, {formData}) => {
         e.preventDefault();
@@ -19,29 +19,36 @@ const AddSubscriber = ({show, onSubmit, error}) => {
 
     return (
         <div>
-            <Modal trigger={show} size='small'>
-                    <Modal.Header>
-                        Create a Subscriber
-                    </Modal.Header>
-                    {ErrorMessage(error)}
-                    <Modal.Content>
-                        <Form onSubmit={handleSubmit}>
+            <Modal trigger={show} size='small' dimmer={'inverted'} closeIcon={<Icon name={'close'} color={'blue'}/>}>
+                <Modal.Header>
+                    Create a Subscriber
+                </Modal.Header>
+                {ErrorMessage(error)}
+                <Modal.Content>
+                    <Form onSubmit={handleSubmit} loading={loading}>
+                        <Form.Input
+                            icon='phone'
+                            iconPosition={'left'}
+                            label='Phone Number'
+                            name='phone_number'
+                            placeholder='+x (xxx)-xxxx'/>
+                        <Form.Group widths='equal'>
                             <Form.Input
-                                icon='phone'
+                                icon='user'
                                 iconPosition={'left'}
-                                label='Phone Number'
-                                name='phone_number'
-                                placeholder='+x(xxx)-xxxx'/>
+                                label='First Name'
+                                name='first_name'
+                                placeholder='first name'/>
                             <Form.Input
-                                icon='privacy'
+                                icon='user'
                                 iconPosition={'left'}
-                                label='Password'
-                                name='password'
-                                placeholder='password'
-                                type='password'/>
-                            <Form.Button primary type='submit'>Login</Form.Button>
-                        </Form>
-                    </Modal.Content>
+                                label='Last Name'
+                                name='last_name'
+                                placeholder='last name'/>
+                        </Form.Group>
+                        <Form.Button primary type='submit' fluid>Login</Form.Button>
+                    </Form>
+                </Modal.Content>
             </Modal>
         </div>
     )
@@ -50,7 +57,8 @@ const AddSubscriber = ({show, onSubmit, error}) => {
 AddSubscriber.propTypes = {
     show: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    error: PropTypes.string
+    error: PropTypes.string,
+    loading: PropTypes.bool
 }
 
 export default AddSubscriber;
