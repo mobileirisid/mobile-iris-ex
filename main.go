@@ -34,7 +34,7 @@ func main() {
 	router.Methods(http.MethodGet).Path("/status/{id}").HandlerFunc(sessionHandler)
 	router.Methods(http.MethodGet).Path("/subscriber").HandlerFunc(retrieveAPIKey(getSubscribersHandler))
 	router.Methods(http.MethodGet).Path("/subscriber/{id}").HandlerFunc(retrieveAPIKey(getSubscriberHandler))
-	router.Methods(http.MethodPost).Path("/subscriber/add").HandlerFunc(retrieveAPIKey(addSubscriberHandler))
+	router.Methods(http.MethodPost).Path("/v2/subscriber/add").HandlerFunc(retrieveAPIKey(addSubscriberHandler))
 	router.Methods(http.MethodPost).Path("/check").HandlerFunc(retrieveAPIKey(requestValidation))
 
 	fs := http.FileServer(http.Dir("./public"))
@@ -173,27 +173,43 @@ func getSubscriberHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func addSubscriberHandler(w http.ResponseWriter, r *http.Request) {
-	key := r.Context().Value(apiKey)
-	url := fmt.Sprintf("%s/subscriber/add?apikey=%s", baseURL, key)
-	err := r.ParseForm()
+	type AddSubscriber struct {
+		FirstName      string `json:"first_name"`
+		LastName       string `json:"last_name"`
+		PhoneValue     string `json:"phone_value"`
+		PhoneCountryID int    `json:"phone_country_id"`
+	}
+
+	var sub AddSubscriber
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&sub)
+
 	if err != nil {
 		writeBadRequest(w, err)
 		return
 	}
 
-	req, err := http.NewRequest(http.MethodPost, url, strings.NewReader(r.Form.Encode()))
+	val, _ := json.Marshal(sub)
+
+	key := r.Context().Value(apiKey)
+	url := fmt.Sprintf("%s/v2/subscriber/add?apikey=%s", baseURL, key)
+
+	resp, err := http.Post(url, "application/json", strings.NewReader(string(val)))
+	defer resp.Body.Close()
+
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"error": "request failed"}`))
-	} else {
-		body, err := ioutil.ReadAll(req.Body)
-		log.Printf(string(body))
-		if err != nil {
-			writeBadRequest(w, err)
-			return
-		}
-		w.Write(body)
+		writeBadRequest(w, err)
+		return
 	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		writeBadRequest(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(body)
 }
 
 func checkScanStatus(w http.ResponseWriter, r *http.Request) {
