@@ -49,10 +49,12 @@ export function fetchSubscriber(id) {
 }
 
 export function addSubscriber(data) {
+    // NOTE: Add default phone_country_id
+    data.phone_country_id = 1;
     return dispatch => {
         dispatch({type: LOADING});
         http
-            .post(`/subscriber/add?apikey=${token}`)
+            .post(`/v2/subscriber/add?apikey=${token}`, data)
             .then(res => {
                 dispatch({type: ADDED_SUBSCRIBER, subscriber: res.data});
             })
@@ -119,12 +121,13 @@ export default function (state = initState, action) {
                 currentSubscriberPhones: action.subscriber.phones
             }
         case ADDED_SUBSCRIBER:
-            const subs = state.subscribers
-            const s = action.subscriber.map(d => { return {id: d.id, firstName: d.first_name, lastName: d.last_name, phones: d.phones}})
+            const subscribers = state.subscribers
+            const sub = action.subscriber;
+            const s = {id: sub.id, firstName: sub.first_name, lastName: sub.last_name, phones: sub.phones}
             return {
                 ...state,
                 loading: false,
-                subscriber: subs.concat(s)
+                subscriber: subscribers.concat(s)
             }
         default:
             return state;

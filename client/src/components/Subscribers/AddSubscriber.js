@@ -30,7 +30,7 @@ const AddSubscriber = ({show, onSubmit, error, loading}) => {
                             icon='phone'
                             iconPosition={'left'}
                             label='Phone Number'
-                            name='phone_number'
+                            name='phone_value'
                             placeholder='+x (xxx)-xxxx'/>
                         <Form.Group widths='equal'>
                             <Form.Input
@@ -46,7 +46,7 @@ const AddSubscriber = ({show, onSubmit, error, loading}) => {
                                 name='last_name'
                                 placeholder='last name'/>
                         </Form.Group>
-                        <Form.Button primary type='submit' fluid>Login</Form.Button>
+                        <Form.Button primary type='submit' fluid>Add Subscriber</Form.Button>
                     </Form>
                 </Modal.Content>
             </Modal>

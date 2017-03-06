@@ -63,7 +63,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(selectSubscriber(subscriber));
         },
         addSubscriber: (data) => {
-            dispatch(addSubscriber(data))
+            dispatch(addSubscriber(data));
         },
         fetchSubscribers: () => {
             dispatch(fetchSubscribers());
