@@ -17,17 +17,17 @@ class HomePage extends Component {
     }
 
     requestCheck() {
-        this.props.onValidate({
-            subscriber_id: this.props.subscriber.id,
-            phone_id: this.props.phones[0].id
-        });
+        this.props.onValidate(
+            this.props.subscriber.id,
+            this.props.phones[0].id
+        );
     }
 
     cancel() {
-        this.props.onCancel({
-            subscriber_id: this.props.subscriber.id,
-            phone_id: this.props.phones[0].id
-        })
+        this.props.onCancel(
+            this.props.subscriber.id,
+            this.props.phones[0].id
+        );
     }
 
     render() {
@@ -56,11 +56,11 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onValidate: (data) => {                         
-            dispatch(requestValidation(data));
+        onValidate: (sub_id, phone_id) => {                         
+            dispatch(requestValidation(sub_id, phone_id));
         },
-        onCancel: (data) => {
-            dispatch(cancelCheck(data));
+        onCancel: (sub_id, phone_id) => {
+            dispatch(cancelCheck(sub_id, phone_id));
         }
     }
 }
