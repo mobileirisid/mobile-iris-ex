@@ -27,15 +27,22 @@ const (
 	baseURL     = "http://localhost:8000"
 )
 
+type subscriberPhonePayload struct {
+	SubscriberID int `json:"subscriber_id"`
+	PhoneID      int `json:"phone_id"`
+}
+
 func main() {
 	router := mux.NewRouter()
 	router.Methods(http.MethodPost).Path("/registration").HandlerFunc(registerationHandler)
+	router.Methods(http.MethodPost).Path("/register_with_subscriber").HandlerFunc(registerationHandler)
 	router.Methods(http.MethodPost).Path("/login").HandlerFunc(sessionHandler)
 	router.Methods(http.MethodGet).Path("/status/{id}").HandlerFunc(sessionHandler)
 	router.Methods(http.MethodGet).Path("/subscriber").HandlerFunc(retrieveAPIKey(getSubscribersHandler))
 	router.Methods(http.MethodGet).Path("/subscriber/{id}").HandlerFunc(retrieveAPIKey(getSubscriberHandler))
 	router.Methods(http.MethodPost).Path("/v2/subscriber/add").HandlerFunc(retrieveAPIKey(addSubscriberHandler))
-	router.Methods(http.MethodPost).Path("/check").HandlerFunc(retrieveAPIKey(requestValidation))
+	router.Methods(http.MethodPost).Path("/request/check").HandlerFunc(retrieveAPIKey(requestValidation))
+	router.Methods(http.MethodPost).Path("/request/cancel").HandlerFunc(retrieveAPIKey(requestCancel))
 
 	fs := http.FileServer(http.Dir("./public"))
 	router.PathPrefix("/").Handler(fs)
@@ -65,6 +72,25 @@ func writeBadRequest(w http.ResponseWriter, e error) {
 	w.Write([]byte(e.Error()))
 }
 
+func mobileIrisIDPostRequest(w http.ResponseWriter, url string, data []byte) {
+	resp, err := http.Post(url, "application/json", strings.NewReader(string(data)))
+	defer resp.Body.Close()
+
+	if err != nil {
+		writeBadRequest(w, err)
+		return
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		writeBadRequest(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(body)
+}
+
 func registerationHandler(w http.ResponseWriter, r *http.Request) {
 	type Registration struct {
 		FirstName      string `json:"first_name"`
@@ -86,22 +112,8 @@ func registerationHandler(w http.ResponseWriter, r *http.Request) {
 
 	val, _ := json.Marshal(registration)
 	url := fmt.Sprintf("%s/register_with_subscriber", baseURL)
-	resp, err := http.Post(url, "application/json", strings.NewReader(string(val)))
-	defer resp.Body.Close()
 
-	if err != nil {
-		writeBadRequest(w, err)
-		return
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		writeBadRequest(w, err)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(body)
+	mobileIrisIDPostRequest(w, url, val)
 }
 
 func sessionHandler(w http.ResponseWriter, r *http.Request) {
@@ -121,22 +133,8 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
 	val, _ := json.Marshal(credentials)
 	url := fmt.Sprintf("%s/session", baseURL)
-	resp, err := http.Post(url, "application/json", strings.NewReader(string(val)))
-	defer resp.Body.Close()
 
-	if err != nil {
-		writeBadRequest(w, err)
-		return
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		writeBadRequest(w, err)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(body)
+	mobileIrisIDPostRequest(w, url, val)
 }
 
 func getSubscribersHandler(w http.ResponseWriter, r *http.Request) {
@@ -194,22 +192,7 @@ func addSubscriberHandler(w http.ResponseWriter, r *http.Request) {
 	key := r.Context().Value(apiKey)
 	url := fmt.Sprintf("%s/v2/subscriber/add?apikey=%s", baseURL, key)
 
-	resp, err := http.Post(url, "application/json", strings.NewReader(string(val)))
-	defer resp.Body.Close()
-
-	if err != nil {
-		writeBadRequest(w, err)
-		return
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		writeBadRequest(w, err)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(body)
+	mobileIrisIDPostRequest(w, url, val)
 }
 
 func checkScanStatus(w http.ResponseWriter, r *http.Request) {
@@ -232,25 +215,37 @@ func checkScanStatus(w http.ResponseWriter, r *http.Request) {
 }
 
 func requestValidation(w http.ResponseWriter, r *http.Request) {
+	var c subscriberPhonePayload
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&c)
+
+	if err != nil {
+		writeBadRequest(w, err)
+		return
+	}
+
+	val, _ := json.Marshal(c)
+
 	key := r.Context().Value(apiKey)
 	url := fmt.Sprintf("%s/request/check.json?apikey=%s", baseURL, key)
 
-	err := r.ParseForm()
+	mobileIrisIDPostRequest(w, url, val)
+}
+
+func requestCancel(w http.ResponseWriter, r *http.Request) {
+	var c subscriberPhonePayload
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&c)
+
 	if err != nil {
-		writeBadRequest(w, errors.New("Make sure to send in subscriber_id and phone_id"))
-	} else {
-		req, err := http.NewRequest(http.MethodPost, url, strings.NewReader(r.Form.Encode()))
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		req.Header.Set("Accept", "application/json")
-
-		client := &http.Client{}
-		res, err := client.Do(req)
-
-		if err != nil {
-			log.Println("Failed to get resp for mobile iris id server due to: ", err)
-		}
-		body, _ := ioutil.ReadAll(res.Body)
-		res.Body.Close()
-		w.Write(body)
+		writeBadRequest(w, err)
+		return
 	}
+
+	val, _ := json.Marshal(c)
+
+	key := r.Context().Value(apiKey)
+	url := fmt.Sprintf("%s/request/cancel.json?apikey=%s", baseURL, key)
+
+	mobileIrisIDPostRequest(w, url, val)
 }

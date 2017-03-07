@@ -13,14 +13,28 @@ const initState = {
 };
 
 export function requestValidation(data) {
-    return dispatch => {
+    return dispatch => {        
         dispatch({type: REQUEST_IRIS_VALIDATION});
+        http.post(`/request/check?apikey=${token}`, data)
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     };
 }
 
-export function cancelCheck() {
+export function cancelCheck(data) {
     return dispatch => {
         dispatch({type: REQUEST_IRIS_CANCEL});
+        http.post(`/request/cancel?apikey=${token}`, data)
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     };
 }
 

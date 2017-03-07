@@ -9,7 +9,7 @@ import AddSubscriber from '../components/Subscribers/AddSubscriber';
 
 class AuthenticatedContainer extends Component {
 
-    componentDidMount() {
+    componentWillMount() {
         this
             .props
             .fetchSubscribers();
@@ -54,7 +54,12 @@ class AuthenticatedContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    return {subscribers: state.account.subscribers, selectedSubscriber: state.account.currentSubscriber, loading: state.account.loading, error: state.account.error}
+    return {
+        subscribers: state.account.subscribers,
+        selectedSubscriber: state.account.currentSubscriber,
+        loading: state.account.loading,
+        error: state.account.error
+    };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {

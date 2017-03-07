@@ -11,7 +11,8 @@ const ADDED_SUBSCRIBER = 'ADD_SUBSCRIBER';
 const token = persistence.getToken();
 const initState = {
     loading: false,
-    currentSubscriber: {}
+    currentSubscriber: {},
+    subscribers: []
 };
 
 export function selectSubscriber(subscriber) {
@@ -56,12 +57,16 @@ export function addSubscriber(data) {
         http
             .post(`/v2/subscriber/add?apikey=${token}`, data)
             .then(res => {
-                dispatch({type: ADDED_SUBSCRIBER, subscriber: res.data});
+                dispatch(addedSubscriber(res.data));
             })
             .catch(err => {
                 dispatch(failedFetch(err));
             });
     }
+}
+
+export function addedSubscriber(data) {
+    return {type: ADDED_SUBSCRIBER, subscriber: data};
 }
 
 function retrievedSubscriber(data) {

@@ -24,7 +24,7 @@ const MainNavbar = ({selected, subscribers, onSelect, onLogout, loading, addSubs
         if (selected && selected.id) {
             return selected.firstName + " " + selected.lastName;
         } else {
-            return "Add or select a subscriber";
+            return "Select a subscriber";
         }
     }
 

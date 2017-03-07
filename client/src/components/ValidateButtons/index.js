@@ -2,7 +2,15 @@ import React, {PropTypes} from 'react'
 import {Button} from 'semantic-ui-react'
 import './styles.css'
 
-const ValidateButtons = ({onClick, onCancel, loading}) => {
+const ValidateButtons = ({onClick, onCancel, loading, enabled}) => {
+    const text = (enabled) => {
+        if (enabled) {
+            return "Validate Identity and Send Money";
+        } else {
+            return "Select a subscriber to validate";
+        }
+    }
+
     if (loading) {        
         return (
             <Button.Group vertical className='bttnGrp'>
@@ -25,8 +33,9 @@ const ValidateButtons = ({onClick, onCancel, loading}) => {
                 size={'huge'}
                 inverted
                 onClick={onClick}
-                attached={'bottom'}>
-                Validate Identity and Send Money
+                attached={'bottom'}
+                disabled={!enabled}>
+                {text(enabled)}
             </Button>
         </div>
     )
@@ -35,7 +44,8 @@ const ValidateButtons = ({onClick, onCancel, loading}) => {
 ValidateButtons.propTypes = {
     onClick: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    enabled: PropTypes.bool
 }
 
 export default ValidateButtons

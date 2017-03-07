@@ -31,7 +31,7 @@ const SignupWithSubscriberForm = ({onSubmit, error, loading}) => {
                     icon='phone'
                     iconPosition={'left'}
                     label='Phone Number'
-                    name='phone-number'
+                    name='phone_value'
                     placeholder='+x(xxx)-xxxx'/>
                 <Form.Group widths='equal'>
                     <Form.Input

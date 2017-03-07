@@ -6,6 +6,30 @@ import ValidateButtons from '../components/ValidateButtons/index';
 import {requestValidation, cancelCheck} from '../redux/modules/irisValidation';
 
 class HomePage extends Component {
+
+    enabled() {
+        const {subscriber} = this.props;
+        if (subscriber && subscriber.id) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    requestCheck() {
+        this.props.onValidate({
+            subscriber_id: this.props.subscriber.id,
+            phone_id: this.props.phones[0].id
+        });
+    }
+
+    cancel() {
+        this.props.onCancel({
+            subscriber_id: this.props.subscriber.id,
+            phone_id: this.props.phones[0].id
+        })
+    }
+
     render() {
         return (
             <div>
@@ -13,27 +37,35 @@ class HomePage extends Component {
                     <MainContent/>
                 </Segment>
                 <ValidateButtons
-                    onClick={this.props.onValidate}
-                    onCancel={this.props.onCancel}
-                    loading={this.props.loading}/>
+                    onClick={this.requestCheck.bind(this)}
+                    onCancel={this.cancel.bind(this)}
+                    loading={this.props.loading}
+                    enabled={this.enabled()}/>
             </div>
         );
     };
 }
 
-const mapStateToProps = (state, ownProps) => {
-    return {loading: state.irisValidation.loading};
+const mapStateToProps = (state, ownProps) => {    
+    return {
+        loading: state.irisValidation.loading,
+        subscriber: state.account.currentSubscriber,
+        phones: state.account.currentSubscriberPhones
+    };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onValidate: () => {
-            dispatch(requestValidation());
+        onValidate: (data) => {                         
+            dispatch(requestValidation(data));
         },
-        onCancel: () => {
-            dispatch(cancelCheck());
+        onCancel: (data) => {
+            dispatch(cancelCheck(data));
         }
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(HomePage)

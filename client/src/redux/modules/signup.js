@@ -1,6 +1,7 @@
 import http from '../../utils/networking';
 import * as persistence from '../../utils/persistence';
 import {push} from 'react-router-redux';
+import {addedSubscriber, selectSubscriber} from './account';
 
 const SIGN_UP = 'SIGN_UP';
 const SIGN_UP_ERROR = 'SIGN_UP_ERROR';
@@ -25,9 +26,9 @@ export function signupWithSubscriber(data) {
                 } else {
                     const {data} = res;
                     persistence.setToken(data.token);
-                    persistence.setCurrentSubscriberId(data.subscriber_id);
-                    persistence.setCurrentPhoneId(data.phone_id);
                     dispatch({type: SIGN_UP_SUCCESS, data});
+                    dispatch(addedSubscriber(data.subscriber));
+                    dispatch(selectSubscriber(data.subscriber));
                     dispatch(push('/'));
                 }
             })

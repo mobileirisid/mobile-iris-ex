@@ -55,7 +55,7 @@ const AddSubscriber = ({show, onSubmit, error, loading}) => {
 }
 
 AddSubscriber.propTypes = {
-    show: PropTypes.func.isRequired,
+    show: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
     error: PropTypes.string,
     loading: PropTypes.bool
