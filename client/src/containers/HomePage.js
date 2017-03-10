@@ -3,10 +3,24 @@ import {connect} from 'react-redux';
 import {Segment} from 'semantic-ui-react';
 import MainContent from '../components/MainContent';
 import ValidateButtons from '../components/ValidateButtons/index';
-import {requestValidation, cancelCheck} from '../redux/modules/irisValidation';
+import {requestValidation, cancelCheck, checkIfValidated} from '../redux/modules/irisValidation';
 
 class HomePage extends Component {
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.shouldPoll) {
+            const check = () => this.props.checkIfValidated(nextProps.checkId, nextProps.count);
+            setTimeout(check, 2000);
+        }
+
+        if (nextProps.maxedOut) {
+            this.props.cancelCheck(
+                this.props.subscriber.id,
+                this.props.phones[0].id
+            );
+        }
+    }
+    
     enabled() {
         const {subscriber} = this.props;
         if (subscriber && subscriber.id) {
@@ -14,7 +28,7 @@ class HomePage extends Component {
         } else {
             return false;
         }
-    }
+    } 
 
     requestCheck() {
         this.props.onValidate(
@@ -50,7 +64,11 @@ const mapStateToProps = (state, ownProps) => {
     return {
         loading: state.irisValidation.loading,
         subscriber: state.account.currentSubscriber,
-        phones: state.account.currentSubscriberPhones
+        phones: state.account.currentSubscriberPhones,
+        shouldPoll: state.irisValidation.shouldPoll,
+        checkId: state.irisValidation.checkId,
+        count: state.irisValidation.count,
+        maxedOut: state.irisValidation.maxedOut,
     };
 }
 
@@ -61,8 +79,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onCancel: (sub_id, phone_id) => {
             dispatch(cancelCheck(sub_id, phone_id));
+        },
+        checkIfValidated: (checkId, count) => {
+            dispatch(checkIfValidated(checkId, count));
         }
-    }
+    };
 }
 
 export default connect(

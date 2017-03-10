@@ -23,7 +23,6 @@ export function requestValidation(sub_id, phone_id) {
         };
         http.post(`/request/check?apikey=${token}`, data)
             .then(res => {
-                console.log(res);
                 dispatch({
                     type: RECEIVED_AUTH_ID,
                     checkId: res.data.id
@@ -52,19 +51,12 @@ export function cancelCheck(sub_id, phone_id) {
     };
 }
 
-export function recievedError(error) {
-    return {type: REQUEST_IRIS_ERROR, error: error};
-}
-
-export function checkIfValidated(sub_id, phone_id, count = 0) {
-     return dispatch => {
-            const data = {
-                subscriber_id: sub_id,
-                phone_id: phone_id
-            };
+export function checkIfValidated(id, count = 0) {
+        return dispatch => {            
             http
-                .post(`/request/check.json?apikey=${token}`, data)
+                .get(`/request/status/${id}?apikey=${token}`)
                 .then(res => {
+                    console.log(res);
                     if (res.data.response === undefined) {
                         dispatch({
                             type: POLLING_FOR_EYE_SCANNED,
@@ -75,7 +67,7 @@ export function checkIfValidated(sub_id, phone_id, count = 0) {
                         if (response.errorCode !== 0) {
                             dispatch(recievedError("Issue with scanning"));
                         } else {
-                            dispatch({type: 'EYE_SCAN_COMPLETED', data: response})
+                            dispatch({type: EYE_SCAN_COMPLETE, data: response})
                         }
                     }
                 })
@@ -83,6 +75,10 @@ export function checkIfValidated(sub_id, phone_id, count = 0) {
                     dispatch(recievedError(err));
                 });
         };
+}
+
+export function recievedError(error) {
+    return {type: REQUEST_IRIS_ERROR, error: error};
 }
 
 export default function (state = initState, action) {
@@ -100,12 +96,13 @@ export default function (state = initState, action) {
         case REQUEST_IRIS_CANCEL:
             return {
                 ...state,
-                loading: false
+                loading: false,
+                shouldPoll: false
             };
         case RECEIVED_AUTH_ID:
             return {
                 ...state,
-                checkID: action.id,
+                checkId: action.checkId,
                 shouldPoll: true
             };
         case POLLING_FOR_EYE_SCANNED:
@@ -121,12 +118,12 @@ export default function (state = initState, action) {
                 loading: false,
                 shouldPoll: false
             };
-            if (action.data.eyesID !== state.account.guid) {
+            debugger;
+            if (action.data.eyesID !== state.account.currentSubscriber.guid) {
                 newState.showError = true;
                 newState.errorMessage = "Another user is expected";
                 newState.showSuccess = false;
             } else {
-                console.log('SUCCESS!!!');
                 newState.errorMessage = null;
                 newState.showError = false
                 newState.showSuccess = true;

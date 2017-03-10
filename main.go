@@ -38,12 +38,12 @@ func main() {
 	router.Methods(http.MethodPost).Path("/registration").HandlerFunc(registerationHandler)
 	router.Methods(http.MethodPost).Path("/register_with_subscriber").HandlerFunc(registerationHandler)
 	router.Methods(http.MethodPost).Path("/session").HandlerFunc(sessionHandler)
-	router.Methods(http.MethodGet).Path("/status/{id}").HandlerFunc(sessionHandler)
 	router.Methods(http.MethodGet).Path("/subscriber").HandlerFunc(retrieveAPIKey(getSubscribersHandler))
 	router.Methods(http.MethodGet).Path("/subscriber/{id}").HandlerFunc(retrieveAPIKey(getSubscriberHandler))
 	router.Methods(http.MethodPost).Path("/v2/subscriber/add").HandlerFunc(retrieveAPIKey(addSubscriberHandler))
 	router.Methods(http.MethodPost).Path("/request/check").HandlerFunc(retrieveAPIKey(requestValidation))
 	router.Methods(http.MethodPost).Path("/request/cancel").HandlerFunc(retrieveAPIKey(requestCancel))
+	router.Methods(http.MethodGet).Path("/request/status/{id}").HandlerFunc(retrieveAPIKey(requestStatusHandler))
 
 	fs := http.FileServer(http.Dir("./public"))
 	router.PathPrefix("/").Handler(fs)
@@ -249,4 +249,22 @@ func requestCancel(w http.ResponseWriter, r *http.Request) {
 	url := fmt.Sprintf("%s/request/cancel.json?apikey=%s", baseURL, key)
 
 	mobileIrisIDPostRequest(w, url, val)
+}
+
+func requestStatusHandler(w http.ResponseWriter, r *http.Request) {
+	key := r.Context().Value(apiKey)
+	vars := mux.Vars(r)
+	if id, err := strconv.ParseInt(vars["id"], 10, 0); err == nil {
+		url := fmt.Sprintf("%s/request/status/%d?apikey=%s", baseURL, id, key)
+		result, err := http.Get(url)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(`{"error": "request failed"}`))
+		} else {
+			body, _ := ioutil.ReadAll(result.Body)
+			w.Write(body)
+		}
+	} else {
+		writeBadRequest(w, errors.New("Invalid id paramater, are you sure this is an int?"))
+	}
 }

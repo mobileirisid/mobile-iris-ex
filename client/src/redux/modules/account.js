@@ -109,7 +109,7 @@ export default function (state = initState, action) {
                 subscribers: action
                     .subscribers
                     .map(d => {
-                        return {id: d.id, firstName: d.first_name, lastName: d.last_name, phones: d.phones}
+                        return {id: d.id, firstName: d.first_name, lastName: d.last_name, guid: d.guid, phones: d.phones}
                     })
             };
         case REQUEST_ERROR:            
@@ -128,7 +128,7 @@ export default function (state = initState, action) {
         case ADDED_SUBSCRIBER:
             const subscribers = state.subscribers
             const sub = action.subscriber;
-            const s = {id: sub.id, firstName: sub.first_name, lastName: sub.last_name, phones: sub.phones}
+            const s = {id: sub.id, firstName: sub.first_name, lastName: sub.last_name, guid: sub.guid, phones: sub.phones}
             return {
                 ...state,
                 loading: false,
