@@ -23,8 +23,9 @@ import (
 type key string
 
 const (
-	apiKey  key = "apikey"
-	baseURL     = "http://localhost:8000"
+	apiKey key = "apikey"
+	// baseURL     = "http://localhost:8000"
+	baseURL = "https://service.mobileirisid.com"
 )
 
 type subscriberPhonePayload struct {

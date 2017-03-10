@@ -49,7 +49,7 @@ export default function reducer(state = initState, action) {
         case LOGIN:
             return state;
         case LOGIN_SUCCESS:
-            return state;
+            return {...state, isAuthenticated: true};
         case LOGIN_ERROR:
             return {...state, errorMessage: action.errorMessage};
         case LOGOUT:
