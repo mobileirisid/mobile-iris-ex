@@ -36,7 +36,7 @@ func main() {
 	router := mux.NewRouter()
 	router.Methods(http.MethodPost).Path("/registration").HandlerFunc(registerationHandler)
 	router.Methods(http.MethodPost).Path("/register_with_subscriber").HandlerFunc(registerationHandler)
-	router.Methods(http.MethodPost).Path("/login").HandlerFunc(sessionHandler)
+	router.Methods(http.MethodPost).Path("/session").HandlerFunc(sessionHandler)
 	router.Methods(http.MethodGet).Path("/status/{id}").HandlerFunc(sessionHandler)
 	router.Methods(http.MethodGet).Path("/subscriber").HandlerFunc(retrieveAPIKey(getSubscribersHandler))
 	router.Methods(http.MethodGet).Path("/subscriber/{id}").HandlerFunc(retrieveAPIKey(getSubscriberHandler))

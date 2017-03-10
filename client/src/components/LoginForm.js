@@ -22,11 +22,11 @@ const LoginForm = ({onSubmit, error}) => {
             {ErrorMessage(error)}
             <Form onSubmit={handleSubmit}>
                 <Form.Input
-                    icon='phone'
+                    icon='mail'
                     iconPosition={'left'}
-                    label='Phone Number'
-                    name='phone_number'
-                    placeholder='+x(xxx)-xxxx'/>                                
+                    label='Email'
+                    name='email'
+                    placeholder='xxxx@xxxx.com'/>                                
                 <Form.Input
                     icon='privacy'
                     iconPosition={'left'}

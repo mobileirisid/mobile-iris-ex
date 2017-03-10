@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import CenteredFormContainer from '../components/CenteredFormContainer';
 import LoginSignupNavbar from '../components/LoginSignupNavbar';
 import LoginForm from '../components/LoginForm';
-import {login} from '../redux/modules/'
+import {login} from '../redux/modules/session';
 
 class Login extends Component {
     render () {

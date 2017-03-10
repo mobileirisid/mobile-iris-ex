@@ -11,13 +11,20 @@ const initState = {
     isAuthenticated: false    
 };
 
-export function signup(data) {    
+export function login(data) {    
     return (dispatch) => {
         dispatch({type: LOGIN});
         http
-            .post('/registration', data)
+            .post('/session', data)
             .then((res) => {
-                dispatch({type: LOGIN_SUCCESS})
+                if (res.data.error) {
+                    dispatch(loginError(res.data.error))
+                } else {
+                    const {data} = res;
+                    persistence.setToken(data.token);
+                    dispatch({type: LOGIN_SUCCESS, data});
+                    dispatch(push('/'));
+                }
             })
             .catch((err) => {
                 dispatch(loginError(err))
