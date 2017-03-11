@@ -62,6 +62,9 @@ export function checkIfValidated(id, count = 0) {
                             type: POLLING_FOR_EYE_SCANNED,
                             count: count + 1
                         });
+                    } else if (res.data.response === 'cancel') {
+                        console.log("User canceled the request during polling")
+                        return;
                     } else {
                         const response = JSON.parse(res.data.response);
                         if (response.errorCode !== 0) {
@@ -91,7 +94,9 @@ export default function (state = initState, action) {
         case REQUEST_IRIS_ERROR:
             return {
                 ...state,
-                loading: false
+                loading: false,
+                shouldPoll: false,
+                error: action.error
             };
         case REQUEST_IRIS_CANCEL:
             return {
@@ -114,21 +119,12 @@ export default function (state = initState, action) {
                 maxedOut: maxedOut
             };
         case EYE_SCAN_COMPLETE:
-            let newState = {...state,
+            return {...state,
                 loading: false,
-                shouldPoll: false
+                shouldPoll: false,
+                eyeId: action.data.guid,
+                error: null
             };
-            debugger;
-            if (action.data.eyesID !== state.account.currentSubscriber.guid) {
-                newState.showError = true;
-                newState.errorMessage = "Another user is expected";
-                newState.showSuccess = false;
-            } else {
-                newState.errorMessage = null;
-                newState.showError = false
-                newState.showSuccess = true;
-            }
-            return newState;
         default:
             return state;
     }
