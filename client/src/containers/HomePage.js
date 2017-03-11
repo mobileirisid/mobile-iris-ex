@@ -54,20 +54,24 @@ class HomePage extends Component {
             error,
             loading,
             eyeId,
-            currentSubscriber
+            subscriber
         } = this.props;
 
         if (error && !loading) {
              return (
-                <Message error header='Unable to Sign up to do following errors' content={error}/>
+                <Message error header='Unable to verify subscriber' content={error}/>
             )
         }
 
-        if (eyeId && currentSubscriber && !loading) {
-            if (eyeId === currentSubscriber.guid) {
+        if (eyeId && subscriber && !loading) {
+            if (eyeId === subscriber.guid) {
                 return (
-                    <Message success header='Successfully Identified' content={"Good Job"}/>
+                    <Message success header='Successfully Identified' content={"The specified amount is being sent"}/>
                 )
+            } else {
+                return (
+                    <Message error header='Unable to verify subscriber' content={"Another user is expected"}/>
+                );
             }
         }
     }

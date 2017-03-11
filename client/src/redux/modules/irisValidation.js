@@ -122,7 +122,7 @@ export default function (state = initState, action) {
             return {...state,
                 loading: false,
                 shouldPoll: false,
-                eyeId: action.data.guid,
+                eyeId: action.data.eyesID,
                 error: null
             };
         default:
