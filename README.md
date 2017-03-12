@@ -1,10 +1,10 @@
 ## Overview
 
-This app is broken up into two pieces
-1. Server side -> written in golang 
-2. client side -> ran using facebook's react app starter pack
-    - facebook react js
-    - react-redux for state 
+This app is broken up into two pieces</br>
+1. Server side -> written in golang </br>
+2. client side -> ran using facebook's react app starter pack</br>
+    - facebook react js</br>
+    - react-redux for state </br>
 
 
 ## Getting started
