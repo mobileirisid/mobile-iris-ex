@@ -7,8 +7,8 @@ const FETCH_SUBSCRIBERS_SUCCESS = 'FETCH_SUBSCRIBERS_SUCCESS';
 const REQUEST_ERROR = 'FETCH_SUBSCRIBER_ERROR';
 const SELECTED_SUBSCRIBER = 'SELECTED_SUBSCRIBER';
 const ADDED_SUBSCRIBER = 'ADD_SUBSCRIBER';
+const CLEAR_ACCOUNT = 'CLEAR_ACCOUNT';
 
-const token = persistence.getToken();
 const initState = {
     loading: false,
     currentSubscriber: {},
@@ -21,6 +21,7 @@ export function selectSubscriber(subscriber) {
 };
 
 export function fetchSubscribers() {
+    const token = persistence.getToken();
     return dispatch => {
         dispatch({type: LOADING});
         http
@@ -36,6 +37,7 @@ export function fetchSubscribers() {
 }
 
 export function fetchSubscriber(id) {
+    const token = persistence.getToken();
     return dispatch => {
         dispatch({type: LOADING});
         http
@@ -51,6 +53,7 @@ export function fetchSubscriber(id) {
 
 export function addSubscriber(data) {
     // NOTE: Add default phone_country_id
+    const token = persistence.getToken();
     data.phone_country_id = 1;
     return dispatch => {
         dispatch({type: LOADING});
@@ -67,6 +70,10 @@ export function addSubscriber(data) {
 
 export function addedSubscriber(data) {
     return {type: ADDED_SUBSCRIBER, subscriber: data};
+}
+
+export function clearAccount() {
+    return {type: CLEAR_ACCOUNT};
 }
 
 function retrievedSubscriber(data) {
@@ -134,6 +141,8 @@ export default function (state = initState, action) {
                 loading: false,
                 subscriber: subscribers.concat(s)
             }
+        case CLEAR_ACCOUNT:
+            return initState;
         default:
             return state;
     }

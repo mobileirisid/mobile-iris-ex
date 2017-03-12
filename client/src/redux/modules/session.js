@@ -1,6 +1,7 @@
 import http from '../../utils/networking';
 import {push} from 'react-router-redux';
 import * as persistence from '../../utils/persistence';
+import {clearAccount} from './account';
 
 const LOGIN = 'LOGIN';
 const LOGIN_ERROR = 'LOGIN_ERROR';
@@ -16,14 +17,18 @@ export function login(data) {
         dispatch({type: LOGIN});
         http
             .post('/session', data)
-            .then((res) => {
+            .then((res) => {                
                 if (res.data.error) {
                     dispatch(loginError(res.data.error))
                 } else {
                     const {data} = res;
-                    persistence.setToken(data.token);
-                    dispatch({type: LOGIN_SUCCESS, data});
-                    dispatch(push('/'));
+                    if (data.token === undefined) {
+                        dispatch(loginError('Failed to retrieve data, please try again'))
+                    } else {
+                        persistence.setToken(data.token);
+                        dispatch({type: LOGIN_SUCCESS, data});
+                        dispatch(push('/'));
+                    }
                 }
             })
             .catch((err) => {
@@ -39,6 +44,7 @@ export function loginError(error) {
 export function logout() {
     persistence.clearAll();
     return dispatch => {
+        dispatch(clearAccount());
         dispatch(push('/login'));
         dispatch({type: LOGOUT});
     }

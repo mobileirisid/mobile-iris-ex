@@ -9,7 +9,7 @@ import AddSubscriber from '../components/Subscribers/AddSubscriber';
 
 class AuthenticatedContainer extends Component {
 
-    componentWillMount() {
+    componentDidMount() {
         this
             .props
             .fetchSubscribers();

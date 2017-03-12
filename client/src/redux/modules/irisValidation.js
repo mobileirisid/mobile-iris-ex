@@ -8,14 +8,14 @@ const RECEIVED_AUTH_ID = 'RECIEVED_AUTH_ID';
 const EYE_SCAN_COMPLETE = 'EYE_SCAN_COMPLETE';
 const POLLING_FOR_EYE_SCANNED = 'POLLING_FOR_EYE_SCANNED';
 
-const token = persistence.getToken();
 const maxAttempts = 100;
 const initState = {
     loading: false
 };
 
 export function requestValidation(sub_id, phone_id) {
-    return dispatch => {                 
+    return dispatch => {
+        const token = persistence.getToken();                 
         dispatch({type: REQUEST_IRIS_VALIDATION});
         const data = {
             subscriber_id: sub_id,
@@ -41,6 +41,7 @@ export function cancelCheck(sub_id, phone_id) {
             subscriber_id: sub_id,
             phone_id: phone_id
         };
+        const token = persistence.getToken();
         http.post(`/request/cancel?apikey=${token}`, data)
             .then(res => {
                 console.log(res);
@@ -52,7 +53,8 @@ export function cancelCheck(sub_id, phone_id) {
 }
 
 export function checkIfValidated(id, count = 0) {
-        return dispatch => {            
+        return dispatch => {
+            const token = persistence.getToken();            
             http
                 .get(`/request/status/${id}?apikey=${token}`)
                 .then(res => {

@@ -30,7 +30,7 @@ const MainContent = () => {
                 </Grid.Row>
                 <Grid.Row>
                     <Header as='h2' size='huge'>
-                        $1,5000.00
+                        $15,000.00
                         <Header.Subheader size='small'>
                             $12,867.74 Balance
                         </Header.Subheader>

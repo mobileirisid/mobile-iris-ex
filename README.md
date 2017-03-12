@@ -77,5 +77,5 @@ To run the server
 
 This server will be listening on port 9000
 
-* `src/redux/modules/` is where we make request to the golang server*
+* `src/redux/modules/` is where we make request to the golang server
 
