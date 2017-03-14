@@ -40,7 +40,7 @@ func main() {
 	router.Methods(http.MethodPost).Path("/session").HandlerFunc(sessionHandler)
 	router.Methods(http.MethodGet).Path("/subscriber").HandlerFunc(retrieveAPIKey(getSubscribersHandler))
 	router.Methods(http.MethodGet).Path("/subscriber/{id}").HandlerFunc(retrieveAPIKey(getSubscriberHandler))
-	router.Methods(http.MethodPost).Path("/v2/subscriber/add").HandlerFunc(retrieveAPIKey(addSubscriberHandler))
+	router.Methods(http.MethodPost).Path("/subscriber/add").HandlerFunc(retrieveAPIKey(addSubscriberHandler))
 	router.Methods(http.MethodPost).Path("/request/check").HandlerFunc(retrieveAPIKey(requestValidation))
 	router.Methods(http.MethodPost).Path("/request/cancel").HandlerFunc(retrieveAPIKey(requestCancel))
 	router.Methods(http.MethodGet).Path("/request/status/{id}").HandlerFunc(retrieveAPIKey(requestStatusHandler))
@@ -191,7 +191,7 @@ func addSubscriberHandler(w http.ResponseWriter, r *http.Request) {
 	val, _ := json.Marshal(sub)
 
 	key := r.Context().Value(apiKey)
-	url := fmt.Sprintf("%s/v2/subscriber/add?apikey=%s", baseURL, key)
+	url := fmt.Sprintf("%s/subscriber/add?apikey=%s", baseURL, key)
 
 	mobileIrisIDPostRequest(w, url, val)
 }
