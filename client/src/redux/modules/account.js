@@ -58,7 +58,7 @@ export function addSubscriber(data) {
     return dispatch => {
         dispatch({type: LOADING});
         http
-            .post(`/v2/subscriber/add?apikey=${token}`, data)
+            .post(`/subscriber/add?apikey=${token}`, data)
             .then(res => {
                 dispatch(addedSubscriber(res.data));
             })
