@@ -1,21 +1,19 @@
 import React from 'react'
-import {Menu, Button} from 'semantic-ui-react';
+import {Menu} from 'semantic-ui-react';
 import {Link} from 'react-router';
 
 const LoginSignupNavbar = () => {
     return (
         <div>
-            <Menu color='blue' inverted>
-                <Menu.Item position='right'>
+            <Menu color='blue' inverted stackable>
+                <Menu.Item>
                     <Link to="/login">
-                        <Button inverted size='small'>
-                            Login
-                        </Button>
+                        Login
                     </Link>
+                </Menu.Item>
+                <Menu.Item>
                     <Link to="/signup">
-                        <Button inverted size='small'>
-                            Signup
-                        </Button>
+                        Signup
                     </Link>
                 </Menu.Item>
             </Menu>

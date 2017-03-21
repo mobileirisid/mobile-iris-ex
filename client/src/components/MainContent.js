@@ -9,7 +9,7 @@ const MainContent = () => {
     return (
         <div>
             <Grid columns={3} centered>
-                <Grid.Row>
+                <Grid.Row columns='equal'>
                     <Grid.Column>
                         <Image src={personOne} floated='right'/>
                     </Grid.Column>
@@ -24,6 +24,7 @@ const MainContent = () => {
                     <Header as='h3'>
                         You are sending money to Heather Williams
                         <Header.Subheader>
+                            <br/>
                             We'll notify them with a text on your behalf
                         </Header.Subheader>
                     </Header>

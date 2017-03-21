@@ -6,7 +6,7 @@ class CenteredFormContainer extends Component {
         return (
             <div>
                 <Grid container centered columns='equal'>
-                    <Grid.Column width={8}>
+                    <Grid.Column mobile={16} computer={8}>
                         <Segment raised padded textAlign={'left'}>
                             {this.props.children}
                         </Segment>

@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
-import {Button} from 'semantic-ui-react';
 import CenterColumn from '../components/CenterColumn';
 import MainNavbar from '../components/MainNavbar';
 import {fetchSubscribers, selectSubscriber, addSubscriber} from '../redux/modules/account';
@@ -25,9 +24,9 @@ class AuthenticatedContainer extends Component {
         const {error} = this.props;
 
         const renderButton = (
-            <Button inverted size='small'>
+            <div style={{cursor: "pointer"}}>
                 Add Subscriber
-            </Button>
+            </div>
         );
 
         const subscriberModal = (<AddSubscriber
