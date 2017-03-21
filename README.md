@@ -22,7 +22,7 @@ go get github.com/alexlivenson/mobile-iris-ex
 ```
 
 This should install the project in the following go directory
-go/src/github/alexlivenson/mobile-iris-id-ex. The project should look like this:
+go/src/github/mobileirisid/mobile-iris-ex. The project should look like this:
 
 Navigate to the directory mentioned above
 
