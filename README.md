@@ -18,7 +18,7 @@ Link to install node & npm: https://nodejs.org/en/ -> choose the recommendend ve
 In your terminal type the following command
 
 ```
-go get github.com/alexlivenson/mobile-iris-ex
+go get github.com/mobileirisid/mobile-iris-ex
 ```
 
 This should install the project in the following go directory
