@@ -41,7 +41,8 @@ func main() {
 	router.Methods(http.MethodGet).Path("/subscriber").HandlerFunc(retrieveAPIKey(getSubscribersHandler))
 	router.Methods(http.MethodGet).Path("/subscriber/{id}").HandlerFunc(retrieveAPIKey(getSubscriberHandler))
 	router.Methods(http.MethodPost).Path("/subscriber/add").HandlerFunc(retrieveAPIKey(addSubscriberHandler))
-	router.Methods(http.MethodPost).Path("/request/check").HandlerFunc(retrieveAPIKey(requestValidation))
+	router.Methods(http.MethodPost).Path("/request/check").HandlerFunc(retrieveAPIKey(requestCheck))
+	router.Methods(http.MethodPost).Path("/request/register").HandlerFunc(retrieveAPIKey(requestRegister))
 	router.Methods(http.MethodPost).Path("/request/cancel").HandlerFunc(retrieveAPIKey(requestCancel))
 	router.Methods(http.MethodGet).Path("/request/status/{id}").HandlerFunc(retrieveAPIKey(requestStatusHandler))
 
@@ -215,7 +216,7 @@ func checkScanStatus(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func requestValidation(w http.ResponseWriter, r *http.Request) {
+func requestCheck(w http.ResponseWriter, r *http.Request) {
 	var c subscriberPhonePayload
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&c)
@@ -229,6 +230,24 @@ func requestValidation(w http.ResponseWriter, r *http.Request) {
 
 	key := r.Context().Value(apiKey)
 	url := fmt.Sprintf("%s/request/check.json?apikey=%s", baseURL, key)
+
+	mobileIrisIDPostRequest(w, url, val)
+}
+
+func requestRegister(w http.ResponseWriter, r *http.Request) {
+	var c subscriberPhonePayload
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&c)
+
+	if err != nil {
+		writeBadRequest(w, err)
+		return
+	}
+
+	val, _ := json.Marshal(c)
+
+	key := r.Context().Value(apiKey)
+	url := fmt.Sprintf("%s/request/register.json?apikey=%s", baseURL, key)
 
 	mobileIrisIDPostRequest(w, url, val)
 }

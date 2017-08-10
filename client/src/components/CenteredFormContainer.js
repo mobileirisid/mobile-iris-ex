@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Segment, Grid} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { Segment, Grid } from 'semantic-ui-react'
 
 class CenteredFormContainer extends Component {
     render() {
@@ -7,9 +7,7 @@ class CenteredFormContainer extends Component {
             <div>
                 <Grid container centered columns='equal'>
                     <Grid.Column mobile={16} computer={8}>
-                        <Segment raised padded textAlign={'left'}>
-                            {this.props.children}
-                        </Segment>
+                        {this.props.children}
                     </Grid.Column>
                 </Grid>
             </div>
