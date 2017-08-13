@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Form, Modal, Message, Icon} from 'semantic-ui-react';
 
-const AddSubscriber = ({show, onSubmit, error, loading}) => {
+const AddSubscriber = ({show, onSubmit, error, loading, registeringEye}) => {
 
     const handleSubmit = (e, {formData}) => {
         e.preventDefault();
@@ -15,6 +15,14 @@ const AddSubscriber = ({show, onSubmit, error, loading}) => {
                 header='Unable to Create Subscriber do to following errors'
                 content={error}/>)
         };
+    }
+
+    const ModalTitle = (registeringEye) => {
+        if (registeringEye) {
+            return "Register iris for new subscriber";
+        } else {
+            return "Create a Subscriber";
+        }
     }
 
     return (
@@ -58,7 +66,8 @@ AddSubscriber.propTypes = {
     show: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
     error: PropTypes.string,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    registeringEye: PropTypes.bool
 }
 
 export default AddSubscriber;

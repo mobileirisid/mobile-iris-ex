@@ -2,10 +2,9 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux';
 import CenterColumn from '../components/CenterColumn';
 import MainNavbar from '../components/MainNavbar';
-import {fetchSubscribers, selectSubscriber, addSubscriber} from '../redux/modules/account';
-// import {requestRegistration} from '../redux/modules/irisValidation';
+import {fetchSubscribers, selectSubscriber} from '../redux/modules/account';
 import {logout} from '../redux/modules/session';
-import AddSubscriber from '../components/Subscribers/AddSubscriber';
+import AddSubscriber from './AddSubscriberContainer';
 
 class AuthenticatedContainer extends Component {
 
@@ -15,41 +14,15 @@ class AuthenticatedContainer extends Component {
             .fetchSubscribers();
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.shouldPoll) {
-            const check = () => this
-                .props
-                .checkIfRegistered(nextProps.checkId, nextProps.count);
-            setTimeout(check, 2000);
-        }
-
-        if (nextProps.maxedOut) {
-            this
-                .props
-                .cancelCheck(this.props.subscriber.id, this.props.phones[0].id);
-        }
-    }
-
     render() {
         const {selectedSubscriber} = this.props;
         const {subscribers} = this.props;
         const {onSelect} = this.props;
         const {logout} = this.props;
         const {loading} = this.props;
-        const {addSubscriber} = this.props;
         const {error} = this.props;
 
-        const renderButton = (
-            <div style={{cursor: "pointer"}}>
-                Add Subscriber
-            </div>
-        );
-
-        const subscriberModal = (<AddSubscriber
-            onSubmit={addSubscriber}
-            show={renderButton}
-            error={error}
-            loading={loading}/>);
+        const subscriberModal = (<AddSubscriber />);
 
         return (
             <div>
@@ -81,9 +54,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onSelect: (subscriber) => {
             dispatch(selectSubscriber(subscriber));
-        },
-        addSubscriber: (data) => {
-            dispatch(addSubscriber(data));
         },
         fetchSubscribers: () => {
             dispatch(fetchSubscribers());

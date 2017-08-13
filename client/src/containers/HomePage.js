@@ -19,7 +19,7 @@ class HomePage extends Component {
             this
                 .props
                 .cancelCheck(this.props.subscriber.id, this.props.phones[0].id);
-        }
+        }                
     }
 
     enabled() {
@@ -79,7 +79,7 @@ class HomePage extends Component {
     render() {
         const message = this.renderMessage();
         return (
-            <div>                
+            <div>
                 <Segment attached>
                     {message}
                     <MainContent/>
@@ -118,7 +118,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         checkIfValidated: (checkId, count) => {
             dispatch(checkIfValidated(checkId, count));
-        }
+        }        
     };
 }
 
