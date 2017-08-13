@@ -247,7 +247,7 @@ func requestRegister(w http.ResponseWriter, r *http.Request) {
 	val, _ := json.Marshal(c)
 
 	key := r.Context().Value(apiKey)
-	url := fmt.Sprintf("%s/request/register.json?apikey=%s", baseURL, key)
+	url := fmt.Sprintf("%s/request/reqister.json?apikey=%s", baseURL, key)
 
 	mobileIrisIDPostRequest(w, url, val)
 }

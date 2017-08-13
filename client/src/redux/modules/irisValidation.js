@@ -2,6 +2,7 @@ import http from '../../utils/networking';
 import * as persistence from '../../utils/persistence';
 
 const REQUEST_IRIS_VALIDATION = 'REQUEST_IRIS_VALIDATION';
+const REQUEST_IRIS_REGISTRATION = 'REQUEST_IRIS_REGISTRATION';
 const REQUEST_IRIS_CANCEL = 'REQUEST_IRIS_CANCEL';
 const REQUEST_IRIS_ERROR = 'REQUEST_IRIS_ERROR';
 const RECEIVED_AUTH_ID = 'RECIEVED_AUTH_ID';
@@ -15,13 +16,34 @@ const initState = {
 
 export function requestValidation(sub_id, phone_id) {
     return dispatch => {
-        const token = persistence.getToken();                 
+        const token = persistence.getToken();
         dispatch({type: REQUEST_IRIS_VALIDATION});
         const data = {
             subscriber_id: sub_id,
             phone_id: phone_id
         };
         http.post(`/request/check?apikey=${token}`, data)
+            .then(res => {
+                dispatch({
+                    type: RECEIVED_AUTH_ID,
+                    checkId: res.data.id
+                })
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+}
+
+export function requestRegistration(sub_id, phone_id) {
+    return dispatch => {
+        const token = persistence.getToken();
+        dispatch({type: REQUEST_IRIS_REGISTRATION});
+        const data = {
+            subscriber_id: sub_id,
+            phone_id: phone_id
+        };
+        http.post(`/request/register?apikey=${token}`, data)
             .then(res => {
                 dispatch({
                     type: RECEIVED_AUTH_ID,
@@ -54,7 +76,7 @@ export function cancelCheck(sub_id, phone_id) {
 
 export function checkIfValidated(id, count = 0) {
         return dispatch => {
-            const token = persistence.getToken();            
+            const token = persistence.getToken();
             http
                 .get(`/request/status/${id}?apikey=${token}`)
                 .then(res => {
@@ -93,6 +115,11 @@ export default function (state = initState, action) {
                 ...state,
                 loading: true
             };
+        case REQUEST_IRIS_REGISTRATION:
+            return {
+                ...state,
+                loading: true
+            }
         case REQUEST_IRIS_ERROR:
             return {
                 ...state,

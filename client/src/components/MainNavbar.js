@@ -41,7 +41,7 @@ const MainNavbar = ({
                 <Menu.Item>
                     <Image src={acmePay} size={"small"}/>
                 </Menu.Item>
-                <Menu.Item content={addSubscriber} />                    
+                <Menu.Item content={addSubscriber} />
                 <Menu.Item as={Dropdown} text={selectedSubscriber()} loading={loading}>
                     <Dropdown.Menu>
                         {subs().filter((s) => s.phones.length > 0).map((s) => {
@@ -53,7 +53,7 @@ const MainNavbar = ({
                         })}
                     </Dropdown.Menu>
                 </Menu.Item>
-                <Menu.Item onClick={onLogout} content="Logout" />                    
+                <Menu.Item onClick={onLogout} content="Logout" />
             </Menu>
         </div>
     );

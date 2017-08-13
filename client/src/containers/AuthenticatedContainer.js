@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import CenterColumn from '../components/CenterColumn';
 import MainNavbar from '../components/MainNavbar';
 import {fetchSubscribers, selectSubscriber, addSubscriber} from '../redux/modules/account';
+// import {requestRegistration} from '../redux/modules/irisValidation';
 import {logout} from '../redux/modules/session';
 import AddSubscriber from '../components/Subscribers/AddSubscriber';
 
@@ -12,6 +13,21 @@ class AuthenticatedContainer extends Component {
         this
             .props
             .fetchSubscribers();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.shouldPoll) {
+            const check = () => this
+                .props
+                .checkIfRegistered(nextProps.checkId, nextProps.count);
+            setTimeout(check, 2000);
+        }
+
+        if (nextProps.maxedOut) {
+            this
+                .props
+                .cancelCheck(this.props.subscriber.id, this.props.phones[0].id);
+        }
     }
 
     render() {

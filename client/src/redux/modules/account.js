@@ -1,5 +1,6 @@
 import http from '../../utils/networking';
 import * as persistence from '../../utils/persistence';
+import {requestRegistration} from './irisValidation'
 
 const LOADING = 'LOADING';
 const FETCH_SUBSCRIBER_SUCCESS = 'FETCH_SUBSCRIBER_SUCCESS';
@@ -61,6 +62,11 @@ export function addSubscriber(data) {
             .post(`/subscriber/add?apikey=${token}`, data)
             .then(res => {
                 dispatch(addedSubscriber(res.data));
+                console.log(res.data);
+                dispatch(requestRegistration(
+                    res.data.id,
+                    res.data.phones[0].id
+                ))
             })
             .catch(err => {
                 dispatch(failedFetch(err));
@@ -119,7 +125,7 @@ export default function (state = initState, action) {
                         return {id: d.id, firstName: d.first_name, lastName: d.last_name, guid: d.guid, phones: d.phones}
                     })
             };
-        case REQUEST_ERROR:            
+        case REQUEST_ERROR:
             return {
                 ...state,
                 loading: false,
@@ -138,7 +144,6 @@ export default function (state = initState, action) {
             const s = {id: sub.id, firstName: sub.first_name, lastName: sub.last_name, guid: sub.guid, phones: sub.phones}
             return {
                 ...state,
-                loading: false,
                 subscriber: subscribers.concat(s)
             }
         case CLEAR_ACCOUNT:
