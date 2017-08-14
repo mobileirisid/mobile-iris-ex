@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react'
-import {Menu, Image, Dropdown} from 'semantic-ui-react';
+import React, { PropTypes } from 'react'
+import { Menu, Image, Dropdown, Button } from 'semantic-ui-react';
 import acmePay from '../icons/acme.png';
 
 const MainNavbar = ({
@@ -8,7 +8,8 @@ const MainNavbar = ({
     onSelect,
     onLogout,
     loading,
-    addSubscriber
+    addSubscriber,
+    register,
 }) => {
 
     const selectedItem = (e, item) => {
@@ -35,21 +36,35 @@ const MainNavbar = ({
         }
     }
 
+    const registerSub = (subscriber_id, phone_id) => {
+        return () => register(subscriber_id, phone_id)
+    }
+
     return (
         <div>
             <Menu color='blue' inverted stackable>
                 <Menu.Item>
-                    <Image src={acmePay} size={"small"}/>
+                    <Image src={acmePay} size={"small"} />
                 </Menu.Item>
                 <Menu.Item content={addSubscriber} />
                 <Menu.Item as={Dropdown} text={selectedSubscriber()} loading={loading}>
                     <Dropdown.Menu>
                         {subs().filter((s) => s.phones.length > 0).map((s) => {
-                            return (
-                                <Dropdown.Item key={s.id} value={s.id} onClick={selectedItem}>
-                                    <font>{s.firstName}&nbsp; {s.lastName} - {s.phones[0].value}</font>
-                                </Dropdown.Item>
-                            );
+                            if (s.guid === undefined) {
+                                return (
+                                    <Dropdown.Item key={s.id} value={s.id} onClick={selectedItem}>
+                                        <font>{s.firstName}&nbsp; {s.lastName} - {s.phones[0].value}&nbsp;</font>
+                                        <Button color='blue' size='small' onClick={registerSub(s.id, s.phones[0].id)}> Register</Button>
+                                    </Dropdown.Item>
+                                );
+
+                            } else {
+                                return (
+                                    <Dropdown.Item key={s.id} value={s.id} onClick={selectedItem}>
+                                        <font>{s.firstName}&nbsp; {s.lastName} - {s.phones[0].value}</font>
+                                    </Dropdown.Item>
+                                );
+                            }
                         })}
                     </Dropdown.Menu>
                 </Menu.Item>
@@ -65,7 +80,8 @@ MainNavbar.propType = {
     onSelect: PropTypes.func.isRequired,
     onLogout: PropTypes.func.isRequired,
     addSubscriber: PropTypes.object,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    register: PropTypes.func,
 }
 
 export default MainNavbar

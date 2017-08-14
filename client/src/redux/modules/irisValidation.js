@@ -40,7 +40,7 @@ export function requestValidation(sub_id, phone_id) {
     };
 }
 
-export function requestRegistration(sub_id, phone_id) {
+export function requestRegistration(sub_id, phone_id) {    
     return dispatch => {
         const token = persistence.getToken();
         dispatch({ type: REQUEST_IRIS_REGISTRATION });
@@ -48,8 +48,10 @@ export function requestRegistration(sub_id, phone_id) {
             subscriber_id: sub_id,
             phone_id: phone_id
         };
+        console.log(data)
         http.post(`/request/register?apikey=${token}`, data)
             .then(res => {
+                console.log(res);
                 dispatch({
                     type: RECEIVED_REG_ID,
                     checkId: res.data.id

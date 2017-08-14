@@ -9,15 +9,15 @@ const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const LOGOUT = 'LOGOUT';
 
 const initState = {
-    isAuthenticated: false    
+    isAuthenticated: false
 };
 
-export function login(data) {    
+export function login(data) {
     return (dispatch) => {
         dispatch({type: LOGIN});
         http
             .post('/session', data)
-            .then((res) => {                
+            .then((res) => {
                 if (res.data.error) {
                     dispatch(loginError(res.data.error))
                 } else {

@@ -27,7 +27,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onSubmit: (data) => {
-            dispatch(login(data)); 
+            dispatch(login(data));
         }
     }
 }

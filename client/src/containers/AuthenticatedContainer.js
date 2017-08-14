@@ -5,6 +5,7 @@ import MainNavbar from '../components/MainNavbar';
 import {fetchSubscribers, selectSubscriber} from '../redux/modules/account';
 import {logout} from '../redux/modules/session';
 import AddSubscriber from './AddSubscriberContainer';
+import {requestRegistration} from '../redux/modules/irisValidation';
 
 class AuthenticatedContainer extends Component {
 
@@ -21,6 +22,7 @@ class AuthenticatedContainer extends Component {
         const {logout} = this.props;
         const {loading} = this.props;
         const {error} = this.props;
+        const {requestRegistration} = this.props;
 
         const subscriberModal = (<AddSubscriber />);
 
@@ -32,7 +34,8 @@ class AuthenticatedContainer extends Component {
                     onSelect={onSelect}
                     onLogout={logout}
                     loading={loading}
-                    addSubscriber={subscriberModal}/>
+                    addSubscriber={subscriberModal}
+                    register={requestRegistration}/>
                 <CenterColumn>
                     {this.props.children}
                 </CenterColumn>
@@ -57,6 +60,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         fetchSubscribers: () => {
             dispatch(fetchSubscribers());
+        },
+        requestRegistration: (sub_id, phone_id) => {
+            dispatch(requestRegistration(sub_id, phone_id));
         },
         logout: () => {
             dispatch(logout());

@@ -19,7 +19,7 @@ class HomePage extends Component {
             this
                 .props
                 .cancelCheck(this.props.subscriber.id, this.props.phones[0].id);
-        }                
+        } 
     }
 
     enabled() {
@@ -68,10 +68,6 @@ class HomePage extends Component {
                 return (
                     <Message success header='Successfully Identified' content={"The specified amount is being sent"}/>
                 )
-            } else {
-                return (
-                    <Message error header='Unable to verify subscriber' content={"Another user is expected"}/>
-                );
             }
         }
     }
@@ -96,7 +92,7 @@ class HomePage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        loading: state.account.loading,
+        loading: state.irisValidation.loading,
         subscriber: state.account.currentSubscriber,
         phones: state.account.currentSubscriberPhones,
         shouldPoll: state.irisValidation.shouldPoll,

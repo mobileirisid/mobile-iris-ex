@@ -7,8 +7,6 @@ import {checkIfIrisRegistered} from '../redux/modules/irisValidation';
 class AddSubscriberContainer extends Component {
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
-
         if (nextProps.shouldPollReg) {
             const check = () => this
                 .props
@@ -36,6 +34,18 @@ class AddSubscriberContainer extends Component {
         const {addSubscriber} = this.props;
         const {error} = this.props;
 
+        // successfully registered new user
+        if (this.props.newEyeId) {
+            return (
+                <AddSubscriber
+                    show={false}
+                    onSubmit={addSubscriber}
+                    trigger={renderButton}
+                    error={error}
+                    loading={loading}
+                    registeringEye={shouldPollReg} />
+            );
+        }
         return (
             <AddSubscriber
                 onSubmit={addSubscriber}
@@ -49,11 +59,12 @@ class AddSubscriberContainer extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        loading: state.account.loading,
+        loading: state.irisValidation.loading,
         error: state.account.error,
         shouldPollReg: state.irisValidation.shouldPollReg,
         regCheckId: state.irisValidation.regCheckId,
-        countReg: state.irisValidation.countReg
+        countReg: state.irisValidation.countReg,
+        newEyeId: state.irisValidation.eyeId
     };
 }
 
