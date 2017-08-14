@@ -61,11 +61,11 @@ export function addSubscriber(data) {
         http
             .post(`/subscriber/add?apikey=${token}`, data)
             .then(res => {
+                dispatch(addedSubscriber(res.data));
                 dispatch(requestRegistration(
                     res.data.id,
                     res.data.phones[0].id
                 ))
-                dispatch(addedSubscriber(res.data));                
             })
             .catch(err => {
                 dispatch(failedFetch(err));

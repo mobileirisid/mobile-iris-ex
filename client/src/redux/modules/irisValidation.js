@@ -95,6 +95,7 @@ export function checkIfIrisRegistered(id, count = 0) {
                     return;
                 } else {
                     const response = JSON.parse(res.data.response);
+                    console.log(res.data)
                     if (response.errorCode !== 0) {
                         dispatch({
                             type: EYE_REGISTRATION_ERROR,
@@ -194,7 +195,7 @@ export default function (state = initState, action) {
             }
         case POLLING_FOR_EYE_REGISTRATION:
             const maxedOutReg = action.count > maxAttempts
-            const shouldPollReg = !maxedOutReg && state.shouldPoll;
+            const shouldPollReg = !maxedOutReg && state.shouldPollReg;
             return {
                 ...state,
                 shouldPollReg: shouldPollReg,

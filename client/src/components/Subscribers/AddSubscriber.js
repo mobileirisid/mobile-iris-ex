@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Form, Modal, Message, Icon} from 'semantic-ui-react';
 
-const AddSubscriber = ({show, onSubmit, error, loading, registeringEye}) => {
+const AddSubscriber = ({trigger, onSubmit, error, loading, registeringEye}) => {
 
     const handleSubmit = (e, {formData}) => {
         e.preventDefault();
@@ -27,7 +27,7 @@ const AddSubscriber = ({show, onSubmit, error, loading, registeringEye}) => {
 
     return (
         <div>
-            <Modal trigger={show} size='small' dimmer={'inverted'} closeIcon={<Icon name={'close'} color={'blue'}/>}>
+            <Modal trigger={trigger} size='small' dimmer={'inverted'} closeIcon={<Icon name={'close'} color={'blue'}/>}>
                 <Modal.Header>
                     Create a Subscriber
                 </Modal.Header>
@@ -63,7 +63,7 @@ const AddSubscriber = ({show, onSubmit, error, loading, registeringEye}) => {
 }
 
 AddSubscriber.propTypes = {
-    show: PropTypes.object.isRequired,
+    trigger: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
     error: PropTypes.string,
     loading: PropTypes.bool,

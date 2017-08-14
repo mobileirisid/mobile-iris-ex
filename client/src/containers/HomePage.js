@@ -96,7 +96,7 @@ class HomePage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        loading: state.irisValidation.loading,
+        loading: state.account.loading,
         subscriber: state.account.currentSubscriber,
         phones: state.account.currentSubscriberPhones,
         shouldPoll: state.irisValidation.shouldPoll,
