@@ -47,7 +47,7 @@ func main() {
 	router.Methods(http.MethodPost).Path("/request/cancel").HandlerFunc(retrieveAPIKey(requestCancel))
 	router.Methods(http.MethodGet).Path("/request/status/{id}").HandlerFunc(retrieveAPIKey(requestStatusHandler))
 
-	fs := http.FileServer(http.Dir("./public"))
+	fs := http.FileServer(http.Dir("./client/build"))
 	router.PathPrefix("/").Handler(fs)
 
 	// Alex L - To enable CORS
