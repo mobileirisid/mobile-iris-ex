@@ -17,6 +17,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/mobileirisid/mobile-iris-ex/config"
 	"github.com/rs/cors"
 )
 
@@ -51,7 +52,7 @@ func main() {
 
 	// Alex L - To enable CORS
 	handler := cors.Default().Handler(router)
-	err := http.ListenAndServe(":9000", handler)
+	err := http.ListenAndServe(config.GetHTTPPort(), handler)
 	if err != nil {
 		log.Fatal("ListendAndServe:", err)
 	}
