@@ -17,6 +17,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/mobileirisid/mobile-iris-ex/config"
 	"github.com/rs/cors"
 )
 
@@ -46,12 +47,12 @@ func main() {
 	router.Methods(http.MethodPost).Path("/request/cancel").HandlerFunc(retrieveAPIKey(requestCancel))
 	router.Methods(http.MethodGet).Path("/request/status/{id}").HandlerFunc(retrieveAPIKey(requestStatusHandler))
 
-	fs := http.FileServer(http.Dir("./public"))
+	fs := http.FileServer(http.Dir("./client/build"))
 	router.PathPrefix("/").Handler(fs)
 
 	// Alex L - To enable CORS
 	handler := cors.Default().Handler(router)
-	err := http.ListenAndServe(":9000", handler)
+	err := http.ListenAndServe(config.GetHTTPPort(), handler)
 	if err != nil {
 		log.Fatal("ListendAndServe:", err)
 	}
