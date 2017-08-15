@@ -1,1 +1,1 @@
-web: mobile-iris-id-ex.exe 
+web: mobile-iris-id-exe 
