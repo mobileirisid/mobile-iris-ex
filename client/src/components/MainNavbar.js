@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import { Menu, Image, Dropdown, Button } from 'semantic-ui-react';
-import acmePay from '../icons/acme.png';
 
 const MainNavbar = ({
     selected,
@@ -44,7 +43,7 @@ const MainNavbar = ({
         <div>
             <Menu color='blue' inverted stackable>
                 <Menu.Item>
-                    <Image src={acmePay} size={"small"} />
+                    <h2>Payments</h2>
                 </Menu.Item>
                 <Menu.Item content={addSubscriber} />
                 <Menu.Item as={Dropdown} text={selectedSubscriber()} loading={loading}>
