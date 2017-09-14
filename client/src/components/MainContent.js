@@ -46,7 +46,7 @@ const MainContent = () => {
                             </Grid.Row>
                         </Grid.Column>
                         <Grid.Column width={13}>
-                            <Header as="h4" textAlign={'left'}>PayPal's MobileIrisID security is
+                            <Header as="h4" textAlign={'left'}>MobileIrisID security is
                                 automatically enabled for transactions over $1000.
                                 <a> Learn More</a>
                             </Header>
