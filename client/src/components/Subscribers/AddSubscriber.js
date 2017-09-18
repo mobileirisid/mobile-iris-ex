@@ -17,14 +17,6 @@ const AddSubscriber = ({show, trigger, onSubmit, error, loading, registeringEye}
         };
     }
 
-    const ModalTitle = (registeringEye) => {
-        if (registeringEye) {
-            return "Register iris for new subscriber";
-        } else {
-            return "Create a Subscriber";
-        }
-    }
-
     return (
         <div>
             <Modal open={show} trigger={trigger} size='small' dimmer={'inverted'} closeIcon={<Icon name={'close'} color={'blue'}/>}>
