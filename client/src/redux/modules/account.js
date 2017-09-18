@@ -16,9 +16,13 @@ const initState = {
     subscribers: []
 };
 
-export function selectSubscriber(subscriber) {
+export function selectSubscriber(subscriber, phoneId) {
     persistence.setCurrentSubscriberId(subscriber.id);
-    return {type: SELECTED_SUBSCRIBER, subscriber}
+    persistence.setCurrentPhoneId(phoneId);
+    return {type: SELECTED_SUBSCRIBER, data: {
+        subscriber: subscriber,
+        phoneId: phoneId
+    }}
 };
 
 export function fetchSubscribers() {
@@ -134,8 +138,9 @@ export default function (state = initState, action) {
             return {
                 ...state,
                 loading: false,
-                currentSubscriber: action.subscriber,
-                currentSubscriberPhones: action.subscriber.phones
+                currentSubscriber: action.data.subscriber,
+                currentSubscriberPhones: action.data.subscriber.phones,
+                selectedPhoneId: action.data.phoneId
             }
         case ADDED_SUBSCRIBER:
             const subscribers = state.subscribers

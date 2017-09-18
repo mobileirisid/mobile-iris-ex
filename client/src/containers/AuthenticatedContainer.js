@@ -17,6 +17,7 @@ class AuthenticatedContainer extends Component {
 
     render() {
         const {selectedSubscriber} = this.props;
+        const {selectedPhoneId} = this.props;
         const {subscribers} = this.props;
         const {onSelect} = this.props;
         const {logout} = this.props;
@@ -30,6 +31,7 @@ class AuthenticatedContainer extends Component {
             <div>
                 <MainNavbar
                     selected={selectedSubscriber}
+                    selectedPhone={selectedPhoneId}
                     subscribers={subscribers}
                     onSelect={onSelect}
                     onLogout={logout}
@@ -48,6 +50,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         subscribers: state.account.subscribers,
         selectedSubscriber: state.account.currentSubscriber,
+        selectedPhoneId: state.account.selectedPhoneId,
         loading: state.account.loading,
         error: state.account.error
     };
@@ -55,8 +58,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onSelect: (subscriber) => {
-            dispatch(selectSubscriber(subscriber));
+        onSelect: (subscriber, phoneId) => {
+            dispatch(selectSubscriber(subscriber, phoneId));
         },
         fetchSubscribers: () => {
             dispatch(fetchSubscribers());

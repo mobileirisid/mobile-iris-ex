@@ -1,8 +1,9 @@
 import React, { PropTypes } from "react";
-import { Menu, Image, Dropdown, Button } from "semantic-ui-react";
+import { Menu, Dropdown, Button } from "semantic-ui-react";
 
 const MainNavbar = ({
 	selected,
+	selectedPhone,
 	subscribers,
 	onSelect,
 	onLogout,
@@ -10,8 +11,8 @@ const MainNavbar = ({
 	addSubscriber,
 	register
 }) => {
-	const selectedItem = (e, item) => {
-		onSelect(subscribers.find(val => val.id === item.value));
+	const selectedItem = (subId) => (e, item) => {        
+		onSelect(subscribers.find(val => val.id === subId), item.value);
 	};
 
 	const subs = () => {
@@ -27,8 +28,8 @@ const MainNavbar = ({
 			return "";
 		}
 
-		if (selected && selected.id) {
-			return selected.firstName + " " + selected.lastName;
+		if (selected && selected.id && selectedPhone) {
+			return selected.firstName + " " + selected.lastName + " - " + selected.phones.filter( p => p.id === selectedPhone)[0].value;
 		} else {
 			return "Select a subscriber";
 		}
@@ -56,8 +57,8 @@ const MainNavbar = ({
 											<Dropdown.Item
 												key={phone.id}
 												value={phone.id}
-												onClick={selectedItem}>
-												{phone.value}&nbsp;
+												onClick={selectedItem(s.id)}>
+												{phone.value}&nbsp;&nbsp;
 												<Button
 													color="blue"
 													size="small"
@@ -81,7 +82,7 @@ const MainNavbar = ({
 											<Dropdown.Item
 												key={phone.id}
 												value={phone.id}
-												onClick={selectedItem}>
+												onClick={selectedItem(s.id)}>
 												{phone.value}&nbsp;
 											</Dropdown.Item>
 										);
