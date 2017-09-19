@@ -70,7 +70,7 @@ const MainNavbar = ({
 										);
 									});
 									return [
-										<Dropdown.Header>
+										<Dropdown.Header style={{fontSize: "initial"}}>
 											{s.firstName}&nbsp; {s.lastName}
 										</Dropdown.Header>,
 										items,
@@ -88,7 +88,7 @@ const MainNavbar = ({
 										);
 									});
 									return [
-										<Dropdown.Header>
+										<Dropdown.Header style={{fontSize: "initial"}}>
 											{s.firstName}&nbsp; {s.lastName}
 										</Dropdown.Header>,
 										items,
