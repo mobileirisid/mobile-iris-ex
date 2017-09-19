@@ -48,7 +48,6 @@ export function requestRegistration(sub_id, phone_id) {
             subscriber_id: sub_id,
             phone_id: phone_id
         };
-        console.log(data)
         http.post(`/request/register?apikey=${token}`, data)
             .then(res => {
                 console.log(res);
@@ -97,7 +96,6 @@ export function checkIfIrisRegistered(id, count = 0) {
                     return;
                 } else {
                     const response = JSON.parse(res.data.response);
-                    console.log(res.data)
                     if (response.errorCode !== 0) {
                         dispatch({
                             type: EYE_REGISTRATION_ERROR,

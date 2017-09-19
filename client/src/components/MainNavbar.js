@@ -11,7 +11,7 @@ const MainNavbar = ({
 	addSubscriber,
 	register
 }) => {
-	const selectedItem = (subId) => (e, item) => {        
+	const selectedItem = (subId) => (e, item) => {
 		onSelect(subscribers.find(val => val.id === subId), item.value);
 	};
 

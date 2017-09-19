@@ -18,7 +18,7 @@ class HomePage extends Component {
         if (nextProps.maxedOut) {
             this
                 .props
-                .cancelCheck(this.props.subscriber.id, this.props.phones[0].id);
+                .cancelCheck(this.props.subscriber.id, this.props.selectedPhoneId);
         } 
     }
 
@@ -36,7 +36,7 @@ class HomePage extends Component {
             .props
             .onValidate(
                 this.props.subscriber.id,
-                this.props.phones[0].id
+                this.props.selectedPhoneId
             );
     }
 
@@ -45,7 +45,7 @@ class HomePage extends Component {
             .props
             .onCancel(
                 this.props.subscriber.id,
-                this.props.phones[0].id
+                this.props.selectedPhoneId
             );
     }
 
@@ -58,6 +58,7 @@ class HomePage extends Component {
         } = this.props;
 
         if (error && !loading) {
+            this.cancel();
              return (
                 <Message error header='Unable to verify subscriber' content={error}/>
             )
@@ -95,6 +96,7 @@ const mapStateToProps = (state, ownProps) => {
         loading: state.irisValidation.loading,
         subscriber: state.account.currentSubscriber,
         phones: state.account.currentSubscriberPhones,
+        selectedPhoneId: state.account.selectedPhoneId,
         shouldPoll: state.irisValidation.shouldPoll,
         checkId: state.irisValidation.checkId,
         count: state.irisValidation.count,
