@@ -191,7 +191,8 @@ export default function (state = initState, action) {
         case REQUEST_IRIS_REGISTRATION:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                regError: null
             }
         case POLLING_FOR_EYE_REGISTRATION:
             const maxedOutReg = action.count > maxAttempts

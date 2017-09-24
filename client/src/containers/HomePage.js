@@ -1,29 +1,32 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Segment, Message} from 'semantic-ui-react';
-import MainContent from '../components/MainContent';
-import ValidateButtons from '../components/ValidateButtons/index';
-import {requestValidation, cancelCheck, checkIfValidated} from '../redux/modules/irisValidation';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Segment, Message } from "semantic-ui-react";
+import MainContent from "../components/MainContent";
+import ValidateButtons from "../components/ValidateButtons/index";
+import {
+    requestValidation,
+    cancelCheck,
+    checkIfValidated
+} from "../redux/modules/irisValidation";
 
 class HomePage extends Component {
-
     componentWillReceiveProps(nextProps) {
         if (nextProps.shouldPoll) {
-            const check = () => this
-                .props
-                .checkIfValidated(nextProps.checkId, nextProps.count);
+            const check = () =>
+                this.props.checkIfValidated(nextProps.checkId, nextProps.count);
             setTimeout(check, 2000);
         }
 
         if (nextProps.maxedOut) {
-            this
-                .props
-                .cancelCheck(this.props.subscriber.id, this.props.selectedPhoneId);
-        } 
+            this.props.cancelCheck(
+                this.props.subscriber.id,
+                this.props.selectedPhoneId
+            );
+        }
     }
 
     enabled() {
-        const {subscriber} = this.props;
+        const { subscriber } = this.props;
         if (subscriber && subscriber.id) {
             return true;
         } else {
@@ -32,43 +35,49 @@ class HomePage extends Component {
     }
 
     requestCheck() {
-        this
-            .props
-            .onValidate(
-                this.props.subscriber.id,
-                this.props.selectedPhoneId
-            );
+        this.props.onValidate(
+            this.props.subscriber.id,
+            this.props.selectedPhoneId
+        );
     }
 
     cancel() {
-        this
-            .props
-            .onCancel(
-                this.props.subscriber.id,
-                this.props.selectedPhoneId
-            );
+        this.props.onCancel(
+            this.props.subscriber.id,
+            this.props.selectedPhoneId
+        );
     }
 
     renderMessage() {
-        const {
-            error,
-            loading,
-            eyeId,
-            subscriber
-        } = this.props;
+        const { error, loading, eyeId, subscriber, regError } = this.props;
 
         if (error && !loading) {
             this.cancel();
-             return (
-                <Message error header='Unable to verify subscriber' content={error}/>
-            )
+            return (
+                <Message
+                    error
+                    header="Unable to verify subscriber"
+                    content={error}
+                />
+            );
+        }
+
+        if (regError && loading) {
+            this.cancel();
+            return (
+               <Message error header='Unable to register subscriber' content={error}/>
+           )
         }
 
         if (eyeId && subscriber && !loading) {
             if (eyeId === subscriber.guid) {
                 return (
-                    <Message success header='Successfully Identified' content={"The specified amount is being sent"}/>
-                )
+                    <Message
+                        success
+                        header="Successfully Identified"
+                        content={"The specified amount is being sent"}
+                    />
+                );
             }
         }
     }
@@ -79,16 +88,17 @@ class HomePage extends Component {
             <div>
                 <Segment attached>
                     {message}
-                    <MainContent/>
+                    <MainContent />
                 </Segment>
                 <ValidateButtons
                     onClick={this.requestCheck.bind(this)}
                     onCancel={this.cancel.bind(this)}
                     loading={this.props.loading}
-                    enabled={this.enabled()}/>
+                    enabled={this.enabled()}
+                />
             </div>
         );
-    };
+    }
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -102,9 +112,10 @@ const mapStateToProps = (state, ownProps) => {
         count: state.irisValidation.count,
         maxedOut: state.irisValidation.maxedOut,
         eyeId: state.irisValidation.eyeId,
-        error: state.irisValidation.error
+        error: state.irisValidation.error,
+        regError: state.irisValidation.regError
     };
-}
+};
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
@@ -116,8 +127,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         checkIfValidated: (checkId, count) => {
             dispatch(checkIfValidated(checkId, count));
-        }        
+        }
     };
-}
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
