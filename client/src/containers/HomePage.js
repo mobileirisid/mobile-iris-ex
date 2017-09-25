@@ -17,12 +17,10 @@ class HomePage extends Component {
             setTimeout(check, 2000);
         }
 
-        if (nextProps.maxedOut) {
-            this.props.cancelCheck(
-                this.props.subscriber.id,
-                this.props.selectedPhoneId
-            );
+        if (nextProps.maxedOut || nextProps.cancelReq) {
+            this.cancel();
         }
+
     }
 
     enabled() {
@@ -52,7 +50,6 @@ class HomePage extends Component {
         const { error, loading, eyeId, subscriber, regError } = this.props;
 
         if (error && !loading) {
-            this.cancel();
             return (
                 <Message
                     error
@@ -63,7 +60,6 @@ class HomePage extends Component {
         }
 
         if (regError && loading) {
-            this.cancel();
             return (
                <Message error header='Unable to register subscriber' content={error}/>
            )
@@ -113,7 +109,8 @@ const mapStateToProps = (state, ownProps) => {
         maxedOut: state.irisValidation.maxedOut,
         eyeId: state.irisValidation.eyeId,
         error: state.irisValidation.error,
-        regError: state.irisValidation.regError
+        regError: state.irisValidation.regError,
+        cancelReq: state.irisValidation.cancelReq
     };
 };
 

@@ -150,7 +150,8 @@ export default function (state = initState, action) {
         case REQUEST_IRIS_VALIDATION:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                cancelReq: false
             };
         case REQUEST_IRIS_ERROR:
             return {
@@ -178,7 +179,8 @@ export default function (state = initState, action) {
                 ...state,
                 shouldPoll: shouldPoll,
                 count: action.count,
-                maxedOut: maxedOut
+                maxedOut: maxedOut,
+                cancelReq: !shouldPoll
             };
         case EYE_SCAN_COMPLETE:
             return {
@@ -186,13 +188,15 @@ export default function (state = initState, action) {
                 loading: false,
                 shouldPoll: false,
                 eyeId: action.data.eyesID,
-                error: null
+                error: null,
+                cancelReq: true
             };
         case REQUEST_IRIS_REGISTRATION:
             return {
                 ...state,
                 loading: true,
-                regError: null
+                regError: null,
+                cancelReq: false
             }
         case POLLING_FOR_EYE_REGISTRATION:
             const maxedOutReg = action.count > maxAttempts
@@ -201,7 +205,8 @@ export default function (state = initState, action) {
                 ...state,
                 shouldPollReg: shouldPollReg,
                 countReg: action.count,
-                maxedOutReg: maxedOutReg
+                maxedOutReg: maxedOutReg,
+                cancelReq: !shouldPollReg
             }
         case EYE_REGISTRATION_COMPLETE:
             return {
@@ -209,12 +214,14 @@ export default function (state = initState, action) {
                 loading: false,
                 shouldPollReg: false,
                 eyeId: action.data.eyesID,
-                error: null
+                error: null,
+                cancelReq: true
             }
         case EYE_REGISTRATION_ERROR:
             return {
                 ...state,
-                regError: action.error
+                regError: action.error,
+                cancelReq: true
             }
         case RECEIVED_REG_ID:
             return {
